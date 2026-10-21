@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SmartGrowDashboard } from "@/components/smartgrow-dashboard";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "SmartGrow AI — Розумний догляд за рослинами" },
@@ -12,5 +13,8 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: SmartGrowDashboard,
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getSession();
+    throw redirect({ to: data.session ? "/dashboard" : "/auth", replace: true });
+  },
 });
