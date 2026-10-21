@@ -25,11 +25,11 @@ function ResetPassword() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (password.length < 8) return toast.error("Пароль має містити щонайменше 8 символів");
+    if (password.length < 8) { toast.error("Пароль має містити щонайменше 8 символів"); return; }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error("Посилання застаріло. Запросіть нове на сторінці входу.");
+    if (error) { toast.error("Посилання застаріло. Запросіть нове на сторінці входу."); return; }
     toast.success("Пароль оновлено");
     navigate({ to: "/dashboard", replace: true });
   };
