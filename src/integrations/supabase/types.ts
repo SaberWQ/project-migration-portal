@@ -14,13 +14,158 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          active_skin: number | null
+          auto_mode: boolean
+          coins: number
+          completed_tasks: string[]
+          created_at: string
+          device_code: string | null
+          display_name: string
+          id: string
+          light_on: boolean
+          owned_skins: number[]
+          plant_name: string
+          sound: boolean
+          updated_at: string
+        }
+        Insert: {
+          active_skin?: number | null
+          auto_mode?: boolean
+          coins?: number
+          completed_tasks?: string[]
+          created_at?: string
+          device_code?: string | null
+          display_name?: string
+          id: string
+          light_on?: boolean
+          owned_skins?: number[]
+          plant_name?: string
+          sound?: boolean
+          updated_at?: string
+        }
+        Update: {
+          active_skin?: number | null
+          auto_mode?: boolean
+          coins?: number
+          completed_tasks?: string[]
+          created_at?: string
+          device_code?: string | null
+          display_name?: string
+          id?: string
+          light_on?: boolean
+          owned_skins?: number[]
+          plant_name?: string
+          sound?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          author_name: string
+          comment: string
+          created_at: string
+          id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          author_name: string
+          comment: string
+          created_at?: string
+          id?: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          author_name?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      buy_skin: {
+        Args: { _price: number; _skin: number }
+        Returns: {
+          active_skin: number | null
+          auto_mode: boolean
+          coins: number
+          completed_tasks: string[]
+          created_at: string
+          device_code: string | null
+          display_name: string
+          id: string
+          light_on: boolean
+          owned_skins: number[]
+          plant_name: string
+          sound: boolean
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      claim_task: {
+        Args: { _task: string }
+        Returns: {
+          active_skin: number | null
+          auto_mode: boolean
+          coins: number
+          completed_tasks: string[]
+          created_at: string
+          device_code: string | null
+          display_name: string
+          id: string
+          light_on: boolean
+          owned_skins: number[]
+          plant_name: string
+          sound: boolean
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      set_device: {
+        Args: { _code: string }
+        Returns: {
+          active_skin: number | null
+          auto_mode: boolean
+          coins: number
+          completed_tasks: string[]
+          created_at: string
+          device_code: string | null
+          display_name: string
+          id: string
+          light_on: boolean
+          owned_skins: number[]
+          plant_name: string
+          sound: boolean
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
