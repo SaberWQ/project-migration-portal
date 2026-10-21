@@ -16,7 +16,7 @@ export default defineConfig({
   vite: {
     server: {
       allowedHosts: [
-        'https://project-migration-portal.onrender.com'
+        'https://project-migration-portal-1.onrender.com'
       ]
     }
   }
