@@ -1,0 +1,9 @@
+<!-- Icon: quest_sword | © 2026 SmartGrow AI Team -->
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="qg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#b44fff"/><stop offset="100%" stop-color="#6633cc"/>
+  </linearGradient></defs>
+  <path d="M14.5 2.5 L20 8 L8 20 L4 20 L4 16 Z" fill="url(#qg)" opacity="0.9"/>
+  <line x1="14" y1="8" x2="8" y2="14" stroke="white" stroke-width="0.5" opacity="0.5"/>
+  <line x1="6" y1="8" x2="10" y2="12" stroke="#b44fff" stroke-width="2" stroke-linecap="round"/>
+</svg>

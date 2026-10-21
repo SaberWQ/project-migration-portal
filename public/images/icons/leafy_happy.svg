@@ -1,0 +1,60 @@
+<!-- Leafy Happy State | © 2026 SmartGrow AI Team -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <defs>
+    <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffd4a0"/>
+      <stop offset="100%" stop-color="#f4b97a"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#44ffaa"/>
+      <stop offset="100%" stop-color="#00cc66"/>
+    </radialGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dcc70"/>
+      <stop offset="100%" stop-color="#1aaa55"/>
+    </linearGradient>
+  </defs>
+  <!-- Glow aura -->
+  <circle cx="60" cy="65" r="50" fill="#00ff88" opacity="0.08"/>
+  <!-- Hair spikes -->
+  <path d="M35 55 C28 42 28 28 36 22 C41 18 46 28 44 42Z" fill="url(#g3)"/>
+  <path d="M45 48 C40 35 42 20 50 16 C55 12 58 22 56 36Z" fill="url(#g3)"/>
+  <path d="M60 45 C58 32 62 18 68 14 C72 10 75 20 72 34Z" fill="url(#g3)"/>
+  <path d="M72 47 C74 34 78 20 85 18 C89 15 90 26 86 38Z" fill="url(#g3)"/>
+  <path d="M82 53 C88 42 93 30 98 28 C102 25 101 36 96 46Z" fill="url(#g3)"/>
+  <!-- Leaf sprout -->
+  <path d="M58 28 C52 16 50 5 57 2 C61 0 64 7 62 20Z" fill="#2dcc70"/>
+  <path d="M62 28 C68 16 70 5 63 2 C59 0 56 7 58 20Z" fill="#1aaa55" opacity="0.8"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="68" rx="26" ry="28" fill="url(#g1)"/>
+  <!-- Hair overlay -->
+  <ellipse cx="60" cy="52" rx="28" ry="16" fill="url(#g3)"/>
+  <!-- Eyes - STAR shaped for happy/thriving -->
+  <!-- Left eye -->
+  <ellipse cx="49" cy="66" rx="9" ry="10" fill="white"/>
+  <ellipse cx="49" cy="68" rx="7" ry="8" fill="url(#g2)"/>
+  <ellipse cx="49" cy="69" rx="4" ry="4.5" fill="#003320"/>
+  <ellipse cx="52" cy="65" rx="2.5" ry="2.5" fill="white" opacity="0.9"/>
+  <!-- Left eye star gleam -->
+  <path d="M49 61 L50 64 L53 63 L51 66 L53 69 L50 68 L49 71 L48 68 L45 69 L47 66 L45 63 L48 64Z"
+        fill="white" opacity="0.4" transform="scale(0.7) translate(21, 24)"/>
+  <!-- Right eye -->
+  <ellipse cx="71" cy="66" rx="9" ry="10" fill="white"/>
+  <ellipse cx="71" cy="68" rx="7" ry="8" fill="url(#g2)"/>
+  <ellipse cx="71" cy="69" rx="4" ry="4.5" fill="#003320"/>
+  <ellipse cx="74" cy="65" rx="2.5" ry="2.5" fill="white" opacity="0.9"/>
+  <!-- Happy mouth - big smile -->
+  <path d="M50 82 Q60 92 70 82" stroke="#cc6644" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M51 83 Q60 88 69 83 Q60 90 51 83Z" fill="white" opacity="0.7"/>
+  <!-- Rosy cheeks big -->
+  <ellipse cx="38" cy="76" rx="8" ry="5" fill="#ff8888" opacity="0.4"/>
+  <ellipse cx="82" cy="76" rx="8" ry="5" fill="#ff8888" opacity="0.4"/>
+  <!-- Sparkles ✨ -->
+  <text x="8" y="30" font-size="12" fill="#ffdd00" opacity="0.9">✨</text>
+  <text x="95" y="25" font-size="10" fill="#00ff88" opacity="0.9">⭐</text>
+  <text x="100" y="75" font-size="8" fill="#00d4ff" opacity="0.8">✦</text>
+  <!-- Body simple -->
+  <path d="M36 96 C32 106 31 120 34 128 C42 134 52 136 60 136 C68 136 78 134 86 128 C89 120 88 106 84 96 C76 91 68 89 60 89 C52 89 44 91 36 96Z" fill="#1a5c30"/>
+  <path d="M44 96 C38 88 36 80 42 75 C46 71 52 77 52 89Z" fill="#27ae60" opacity="0.8"/>
+  <path d="M76 96 C82 88 84 80 78 75 C74 71 68 77 68 89Z" fill="#27ae60" opacity="0.8"/>
+</svg>
