@@ -8,15 +8,15 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
+    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+    // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Добавляем секцию дополнительных настроек Vite
   vite: {
     server: {
-      allowedHosts: ['://onrender.com']
-    },
-    // Указываем Nitro собирать проект под Node.js (для хостинга Render)
-    nitro: {
-      preset: 'node-server'
+      host: true, // Разрешает прослушивание внешних адресов
+      allowedHosts: true // Разрешает любые хосты (включая ваш домен на render.com)
     }
   }
 });
