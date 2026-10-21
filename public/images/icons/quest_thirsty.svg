@@ -1,0 +1,43 @@
+<!-- Quest: Leafy is Thirsty | © 2026 SmartGrow AI Team -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <defs>
+    <linearGradient id="qbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0a30"/>
+      <stop offset="100%" stop-color="#0d1525"/>
+    </linearGradient>
+    <linearGradient id="qbar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b44fff"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="100" rx="12" fill="url(#qbg)" stroke="#b44fff" stroke-width="1" opacity="0.9"/>
+  <!-- Timer badge -->
+  <rect x="10" y="10" width="60" height="20" rx="6" fill="#ff6600" opacity="0.9"/>
+  <text x="40" y="24" text-anchor="middle" font-family="monospace" font-size="10" fill="white" font-weight="bold">⏱ 15:30</text>
+  <!-- Title -->
+  <text x="80" y="24" font-family="sans-serif" font-size="13" fill="white" font-weight="bold">Leafy is thirsty!</text>
+  <!-- Description -->
+  <text x="10" y="50" font-family="sans-serif" font-size="10" fill="#8ab0c0">Water your plant within 15 minutes to keep it happy.</text>
+  <!-- Rewards -->
+  <text x="10" y="70" font-family="sans-serif" font-size="9" fill="#b44fff">Rewards:</text>
+  <rect x="65" y="60" width="55" height="16" rx="4" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="0.5"/>
+  <text x="92" y="72" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#00d4ff">+50 XP</text>
+  <rect x="125" y="60" width="65" height="16" rx="4" fill="rgba(255,170,0,0.15)" stroke="#ffaa00" stroke-width="0.5"/>
+  <text x="157" y="72" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#ffaa00">+25 Coins</text>
+  <!-- Progress bar -->
+  <text x="10" y="90" font-family="sans-serif" font-size="8" fill="#4a7090">Time Remaining</text>
+  <rect x="100" y="83" width="140" height="6" rx="3" fill="#0a1525"/>
+  <rect x="100" y="83" width="90" height="6" rx="3" fill="url(#qbar)"/>
+  <!-- Mini Leafy -->
+  <circle cx="265" cy="50" r="25" fill="#0d2010" opacity="0.5"/>
+  <ellipse cx="265" cy="42" rx="14" ry="16" fill="#ffd4a0"/>
+  <ellipse cx="265" cy="32" rx="15" ry="9" fill="#2dcc70"/>
+  <ellipse cx="259" cy="41" rx="5" ry="6" fill="white"/>
+  <ellipse cx="259" cy="42" rx="3.5" ry="4.5" fill="#44ffaa"/>
+  <ellipse cx="259" cy="43" rx="2" ry="2.5" fill="#003320"/>
+  <ellipse cx="271" cy="41" rx="5" ry="6" fill="white"/>
+  <ellipse cx="271" cy="42" rx="3.5" ry="4.5" fill="#44ffaa"/>
+  <ellipse cx="271" cy="43" rx="2" ry="2.5" fill="#003320"/>
+  <path d="M261 52 Q265 56 269 52" stroke="#cc6644" stroke-width="1.5" fill="none"/>
+  <path d="M255 65 C252 72 252 80 256 84 C262 88 270 88 274 84 C278 80 278 72 275 65 C270 62 260 62 255 65Z" fill="#1a5c30"/>
+</svg>

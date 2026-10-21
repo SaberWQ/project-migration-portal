@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Leafy - STRESSED mood | © 2026 SmartGrow AI -->
+<!-- Ліфі - настрій STRESSED | Авторські права захищені -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="bg_glow" cx="50%" cy="70%" r="55%">
+      <stop offset="0%" stop-color="#ffaa00" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffaa00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="skin_grad" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffe0b2"/>
+      <stop offset="100%" stop-color="#ffcc80"/>
+    </radialGradient>
+    <filter id="leaf_glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="body_shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#ffaa00" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient glow / Навколишнє свічення -->
+  <ellipse cx="100" cy="210" rx="90" ry="40" fill="url(#bg_glow)"/>
+
+  <!-- Ground / Земля -->
+  <ellipse cx="100" cy="248" rx="55" ry="16" fill="#1a2e12" opacity="0.8"/>
+  <ellipse cx="100" cy="244" rx="50" ry="13" fill="#2d4a1e"/>
+  <ellipse cx="100" cy="240" rx="46" ry="11" fill="#3d6b2a"/>
+  <!-- Grass blades / Травинки -->
+  <path d="M58 237 Q62 226 66 237" fill="#4caf50"/>
+  <path d="M72 234 Q77 222 82 234" fill="#66bb6a"/>
+  <path d="M118 234 Q123 222 128 234" fill="#4caf50"/>
+  <path d="M134 237 Q138 226 142 237" fill="#66bb6a"/>
+
+  <!-- Legs / Ноги -->
+  <rect x="88" y="228" width="10" height="18" rx="5" fill="#ffcc80"/>
+  <rect x="102" y="228" width="10" height="18" rx="5" fill="#ffcc80"/>
+  <!-- Boots / Чоботи -->
+  <ellipse cx="93" cy="246" rx="8" ry="5" fill="#2e7d32"/>
+  <ellipse cx="107" cy="246" rx="8" ry="5" fill="#2e7d32"/>
+
+  <!-- Dress body / Тіло сукні -->
+  <path d="M76 196 Q70 218 74 237 Q100 248 126 237 Q130 218 124 196 Q112 187 100 190 Q88 187 76 196Z"
+        fill="#2e7d32" stroke="#1b5e20" stroke-width="1.2" filter="url(#body_shadow)"/>
+  <!-- Leaf pattern on dress / Листковий узор на сукні -->
+  <path d="M82 200 Q88 208 82 222" stroke="#43a047" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M92 198 Q97 207 91 220" stroke="#43a047" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M118 200 Q112 208 118 222" stroke="#43a047" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- Dress collar leaf / Воротник-листок -->
+  <path d="M82 193 Q100 184 118 193 Q113 176 100 179 Q87 176 82 193Z" fill="#388e3c" stroke="#2e7d32" stroke-width="0.8"/>
+  <!-- Belt / Пасок -->
+  <path d="M78 210 Q100 213 122 210" stroke="#ffd54f" stroke-width="2" fill="none" opacity="0.7"/>
+
+  <!-- Arms / Руки -->
+  <path d="M76 202 Q57 207 53 222 Q59 225 67 217 Q70 210 78 207Z" fill="#ffcc80" stroke="#ffb74d" stroke-width="0.8"/>
+  <path d="M124 202 Q143 207 147 222 Q141 225 133 217 Q130 210 122 207Z" fill="#ffcc80" stroke="#ffb74d" stroke-width="0.8"/>
+  <!-- Hand leaves / Листки на руках -->
+  <path d="M53 222 Q47 215 50 208 Q56 212 55 220Z" fill="#4caf50" opacity="0.8"/>
+  <path d="M147 222 Q153 215 150 208 Q144 212 145 220Z" fill="#4caf50" opacity="0.8"/>
+
+  <!-- Neck / Шия -->
+  <rect x="93" y="162" width="14" height="20" rx="6" fill="url(#skin_grad)"/>
+
+  <!-- Head / Голова -->
+  <ellipse cx="100" cy="146" rx="38" ry="40" fill="url(#skin_grad)" stroke="#ffb74d" stroke-width="0.8"/>
+
+  <!-- Hair back layer / Волосся задній шар -->
+  <path d="M63 138 Q56 108 66 88 Q74 70 100 68 Q126 70 134 88 Q144 108 137 138"
+        fill="#2e7d32" stroke="#1b5e20" stroke-width="0.8"/>
+
+  <!-- Ear flaps / Вушні клапті -->
+  <path d="M63 146 Q49 137 52 125 Q60 128 64 140Z" fill="#388e3c"/>
+  <path d="M137 146 Q151 137 148 125 Q140 128 136 140Z" fill="#388e3c"/>
+
+  <!-- Hair front / Волосся передній шар -->
+  <path d="M67 128 Q63 106 73 90 Q86 76 100 74 Q114 76 127 90 Q137 106 133 128"
+        fill="#388e3c"/>
+  <path d="M67 128 Q65 112 72 96 Q80 86 90 84" stroke="#43a047" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M133 128 Q135 112 128 96 Q120 86 110 84" stroke="#43a047" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Bangs / Чубчик -->
+  <path d="M71 118 Q77 93 90 98 Q95 113 87 120Z" fill="#2e7d32"/>
+  <path d="M80 114 Q88 90 100 93 Q106 110 97 117Z" fill="#388e3c"/>
+  <path d="M129 118 Q123 93 110 98 Q105 113 113 120Z" fill="#2e7d32"/>
+  <!-- Hair shine -->
+  <path d="M76 88 Q85 80 96 80" stroke="#66bb6a" stroke-width="2" fill="none" opacity="0.5"/>
+
+  <!-- Leaf sprout / Пагін-листок -->
+  <path d="M94 74 Q100 50 110 62 Q114 73 100 76Z" fill="#4caf50" filter="url(#leaf_glow)" stroke="#2e7d32" stroke-width="0.8"/>
+  <path d="M100 74 Q95 50 88 63 Q85 73 100 76Z" fill="#66bb6a" filter="url(#leaf_glow)" stroke="#2e7d32" stroke-width="0.8"/>
+  <line x1="100" y1="76" x2="100" y2="58" stroke="#2e7d32" stroke-width="1.5"/>
+  <!-- Sprout glow -->
+  <ellipse cx="100" cy="62" rx="12" ry="8" fill="#ffaa00" opacity="0.2" filter="url(#leaf_glow)"/>
+
+  <!-- EYES / ОЧІ -->
+  
+  <ellipse cx="84" cy="148" rx="9" ry="10" fill="white"/>
+  <ellipse cx="84" cy="149" rx="7" ry="8" fill="#f57c00"/>
+  <ellipse cx="84" cy="149" rx="4" ry="5" fill="#e65100"/>
+  <circle cx="87" cy="145" r="2.5" fill="white"/>
+  <circle cx="82" cy="153" r="1" fill="white" opacity="0.5"/>
+  <path d="M75 144 Q84 138 93 144" stroke="#1b5e20" stroke-width="1.5" fill="none"/>
+
+  <ellipse cx="116" cy="148" rx="9" ry="10" fill="white"/>
+  <ellipse cx="116" cy="149" rx="7" ry="8" fill="#f57c00"/>
+  <ellipse cx="116" cy="149" rx="4" ry="5" fill="#e65100"/>
+  <circle cx="119" cy="145" r="2.5" fill="white"/>
+  <circle cx="114" cy="153" r="1" fill="white" opacity="0.5"/>
+  <path d="M107 144 Q116 138 125 144" stroke="#1b5e20" stroke-width="1.5" fill="none"/>
+
+  <!-- Eyebrows / Брови -->
+  <path d="M75 137 Q84 134 93 137" stroke="#2e7d32" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M107 137 Q116 134 125 137" stroke="#2e7d32" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose / Ніс -->
+  <path d="M97 158 Q100 162 103 158" stroke="#e8a87c" stroke-width="1.5" fill="none"/>
+
+  <!-- MOUTH / РОТ -->
+  <path d="M90 172 Q100 167 110 172" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Blush / Рум'янець -->
+  <ellipse cx="73" cy="160" rx="9" ry="5" fill="#ffb74d" opacity="0.4"/>
+  <ellipse cx="127" cy="160" rx="9" ry="5" fill="#ffb74d" opacity="0.4"/>
+
+  <!-- Accessories - star / Зірочки -->
+  <circle cx="73" cy="130" r="3" fill="#ffaa00" opacity="0.6"/>
+  <circle cx="127" cy="130" r="3" fill="#ffaa00" opacity="0.6"/>
+
+  <!-- Sparkles / Іскри -->
+  
+
+  <!-- Floating particles / Плаваючі частинки -->
+  
+  <circle cx="40" cy="200" r="3" fill="#ffaa00" opacity="0.5">
+    <animate attributeName="cy" values="200;190;200" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="165" cy="185" r="2" fill="#ffaa00" opacity="0.4">
+    <animate attributeName="cy" values="185;175;185" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="30" cy="160" r="2" fill="#b44fff" opacity="0.4">
+    <animate attributeName="cy" values="160;150;160" dur="4s" repeatCount="indefinite"/>
+  </circle>
+</svg>

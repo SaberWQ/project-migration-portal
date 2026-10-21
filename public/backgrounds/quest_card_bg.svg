@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="quest_g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0a2e"/>
+      <stop offset="100%" stop-color="#0a1525"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="120" rx="12" fill="url(#quest_g)"/>
+  <rect width="400" height="120" rx="12" fill="none" stroke="#b44fff" stroke-width="1.5" opacity="0.5"/>
+  <!-- Corner accents -->
+  <path d="M0 20 L0 8 Q0 0 8 0 L20 0" stroke="#b44fff" stroke-width="2" fill="none"/>
+  <path d="M380 0 L392 0 Q400 0 400 8 L400 20" stroke="#b44fff" stroke-width="2" fill="none"/>
+  <path d="M0 100 L0 112 Q0 120 8 120 L20 120" stroke="#b44fff" stroke-width="2" fill="none"/>
+  <path d="M380 120 L392 120 Q400 120 400 112 L400 100" stroke="#b44fff" stroke-width="2" fill="none"/>
+</svg>
