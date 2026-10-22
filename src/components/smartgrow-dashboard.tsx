@@ -1,6 +1,6 @@
-
 import { useMemo, useState } from 'react'
-import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, Menu, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, Menu, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 
 type View = 'home' | 'analytics' | 'ai' | 'tasks' | 'shop' | 'settings'
 
@@ -57,7 +57,22 @@ export function SmartGrowDashboard() {
         </aside>
 
         <section className="flex-1 px-5 pb-28 pt-6 sm:px-8 lg:px-12 lg:pb-10 lg:pt-10">
-          <header className="flex items-center justify-between"><div className="lg:hidden"><Brand compact /></div><div className="hidden lg:block"><p className="text-sm font-medium text-[#739084]">Середа, 21 жовтня 2026</p><h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">Доброго дня, Ілля</h1></div><div className="flex items-center gap-3"><button aria-label="Сповіщення" onClick={() => setNotification('Нових сповіщень немає')} className="relative grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161]"><Bell className="size-[18px]" /><span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" /></button><button aria-label="Меню" onClick={() => setView('home')} className="grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161] lg:hidden"><Menu className="size-[18px]" /></button><div className="hidden size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49] sm:grid">ІЛ</div></div></header>
+          <header className="flex items-center justify-between">
+            <div className="lg:hidden"><Brand compact /></div>
+            <div className="hidden lg:block"><p className="text-sm font-medium text-[#739084]">Середа, 21 жовтня 2026</p><h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">Доброго дня, Ілля</h1></div>
+            
+            <div className="flex items-center gap-3">
+              {/* Нова кнопка "Залишити відгук" */}
+              <Link to="/feedback" className="flex items-center gap-2 rounded-full bg-[#c8e86a] px-3 py-2 sm:px-4 text-sm font-semibold text-[#21483e] transition hover:bg-[#b9dc5c]">
+                <MessageSquare className="size-4" />
+                <span className="hidden sm:inline">Залишити відгук</span>
+              </Link>
+              
+              <button aria-label="Сповіщення" onClick={() => setNotification('Нових сповіщень немає')} className="relative grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161]"><Bell className="size-[18px]" /><span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" /></button>
+              <button aria-label="Меню" onClick={() => setView('home')} className="grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161] lg:hidden"><Menu className="size-[18px]" /></button>
+              <div className="hidden size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49] sm:grid">ІЛ</div>
+            </div>
+          </header>
           {notification && <div className="mt-4 flex items-center justify-between rounded-xl bg-[#e4f0df] px-4 py-3 text-sm text-[#39795d]"><span className="flex items-center gap-2"><Check className="size-4" />{notification}</span><button onClick={() => setNotification('')} aria-label="Закрити"><X className="size-4" /></button></div>}
           {view === 'home' && <HomeView autoMode={autoMode} setAutoMode={setAutoMode} pumpRunning={pumpRunning} runPump={runPump} setView={setView} lastUpdated={lastUpdated} />}
           {view === 'analytics' && <AnalyticsView />}
