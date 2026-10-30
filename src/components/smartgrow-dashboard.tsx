@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, Menu, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
+import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
 import { ProfileEditor } from '@/components/ProfileEditor'
 import { supabase } from '@/lib/supabase'
@@ -225,7 +225,6 @@ export function SmartGrowDashboard() {
   const [bought, setBought] = useState<number[]>([])
   const [language, setLanguage] = useState<Language>('Українська')
 
-  // Управление темой оформления
   const [theme, setTheme] = useState<ThemeOption>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('smartgrow_theme') as ThemeOption) || 'Світла'
@@ -348,15 +347,23 @@ export function SmartGrowDashboard() {
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" />
               </button>
 
-              <button aria-label="Menu" onClick={() => setView('home')} className={`grid size-10 place-items-center rounded-full border ${isDark ? 'border-[#2a3d35] bg-[#1a2823] text-[#8da59a]' : 'border-[#dfe8df] bg-white text-[#4d7161]'} lg:hidden`}>
-                <Menu className="size-[18px]" />
+              {/* Кнопка настроек для мобильных устройств */}
+              <button 
+                aria-label="Settings" 
+                onClick={() => setView('settings')} 
+                className={`grid size-10 place-items-center rounded-full border cursor-pointer ${isDark ? 'border-[#2a3d35] bg-[#1a2823] text-[#8da59a]' : 'border-[#dfe8df] bg-white text-[#4d7161]'} lg:hidden`}
+              >
+                <Settings className="size-[18px]" />
               </button>
 
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="Avatar" className="hidden size-10 rounded-full object-cover border border-[#dfe8df] sm:block" />
-              ) : (
-                <div className="hidden size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49] sm:grid">{initials}</div>
-              )}
+              {/* Кликабельная аватарка на мобильных и ПК */}
+              <button onClick={() => setView('settings')} className="cursor-pointer focus:outline-none">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className="size-10 rounded-full object-cover border border-[#dfe8df]" />
+                ) : (
+                  <div className="grid size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49]">{initials}</div>
+                )}
+              </button>
 
               <LogoutButton />
             </div>
@@ -371,7 +378,10 @@ export function SmartGrowDashboard() {
           {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} autoMode={autoMode} setAutoMode={setAutoMode} profile={profile} onProfileUpdate={fetchProfile} t={t} isDark={isDark} />}
         </section>
       </div>
-      <nav className={`fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-md items-center justify-around rounded-2xl border p-2 shadow-lg backdrop-blur lg:hidden ${isDark ? 'border-[#2a3d35] bg-[#1a2823]/95' : 'border-[#deeadf] bg-white/95'}`}>{navItems.slice(0, 5).map((item) => <MobileNavItem key={item.id} {...item} active={view === item.id} isDark={isDark} onClick={() => setView(item.id)} />)}</nav>
+
+      <nav className={`fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-md items-center justify-around rounded-2xl border p-2 shadow-lg backdrop-blur lg:hidden ${isDark ? 'border-[#2a3d35] bg-[#1a2823]/95' : 'border-[#deeadf] bg-white/95'}`}>
+        {navItems.map((item) => <MobileNavItem key={item.id} {...item} active={view === item.id} isDark={isDark} onClick={() => setView(item.id)} />)}
+      </nav>
     </main>
   )
 }
