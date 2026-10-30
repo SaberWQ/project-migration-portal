@@ -1,24 +1,57 @@
-# Project Migration Portal
+# 🌿 SmartGrow AI
 
-/skill:migrate-external-project Source: Replit. Migrate the attached project into Lovable.
+Розумна система моніторингу теплиць та догляду за домашніми рослинами з інтегрованим AI-помічником **Leafy**.
 
-This project was built with [Lovable](https://lovable.dev).
+---
 
-## Build with Lovable
+## 🚀 Технологічний стек
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/f5c98aec-f717-4087-b239-6006004f4747).
+- **Фреймворк**: React / TanStack Start / TanStack Router
+- **Збірка**: Vite
+- **Стилізація**: Tailwind CSS, Lucide Icons
+- **Бекенд та База даних**: Supabase (Authentication, PostgreSQL Database, Storage)
+- **Валідація та сповіщення**: Zod, Sonner (Toast notifications)
+- **Деплой**: Render (`NITRO_PRESET=node-server`)
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+---
 
-## Development
+## ✨ Основні можливості
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+- **🔑 Авторизація та безпека**: 
+  - Реєстрація та вхід за поштою й паролем через Supabase Auth.
+  - Автоматична генерація нікнейму з пошти (частина до `@`).
+  - Інлайн-валідація полів українською мовою.
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+- **👤 Управління профілем**:
+  - Редагування імені користувача.
+  - Завантаження та оновлення аватарки у бакет `avatars` з автоматичним відображенням у дашборді.
+
+- **🌱 Панель керування (Dashboard)**:
+  - Моніторинг показників у реальному часі (вологість ґрунту, температура, стан повітря).
+  - Керування ручним та автоматичним поливом.
+  - Історія та статистика за тиждень.
+
+- **🤖 Leafy AI & Гейміфікація**:
+  - AI-помічник для отримання порад щодо догляду за рослиною.
+  - Система квестів, балансу монет та магазину скінів.
+
+- **💬 Зворотний зв'язок**:
+  - Інтерактивна сторінка відгуків (`/feedback`) із вибором настрою, оцінкою та зручною навігацією назад до дашборду.
+
+---
+
+## 🛠 Локальна розробка
+
+### 1. Передумови
+Переконайтеся, що у вас встановлено **Node.js** (версії 18+) та **npm**.
+
+### 2. Встановлення
+```bash
+# Клонувати репозиторій
+git clone <https://github.com/SaberWQ/project-migration-portal.git>
+
+# Перейти в директорію проекту
+cd project-migration-portal
+
+# Встановити залежності
+npm install
