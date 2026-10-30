@@ -1,0 +1,179 @@
+<!-- Leafy - SmartGrow AI Plant Character | © 2026 SmartGrow AI Team -->
+<!-- Anime-style chibi plant girl with green hair and leaf dress -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="skinGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffd4a0"/>
+      <stop offset="100%" stop-color="#f4b97a"/>
+    </radialGradient>
+    <radialGradient id="eyeGrad" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#44ffaa"/>
+      <stop offset="100%" stop-color="#00cc66"/>
+    </radialGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dcc70"/>
+      <stop offset="50%" stop-color="#1aaa55"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+    <linearGradient id="dressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a5c30"/>
+      <stop offset="100%" stop-color="#0d3a1e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ground glow effect -->
+  <ellipse cx="100" cy="240" rx="70" ry="15" fill="url(#glow)"/>
+
+  <!-- Floating particles around character -->
+  <circle cx="45" cy="90" r="3" fill="#00d4ff" opacity="0.7">
+    <animate attributeName="cy" values="90;80;90" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="155" cy="110" r="2" fill="#00ff88" opacity="0.6">
+    <animate attributeName="cy" values="110;100;110" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="150" r="4" fill="#00d4ff" opacity="0.5">
+    <animate attributeName="cy" values="150;138;150" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="160" cy="70" r="3" fill="#00ff88" opacity="0.8">
+    <animate attributeName="cy" values="70;58;70" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="130" cy="180" r="2.5" fill="#b44fff" opacity="0.6">
+    <animate attributeName="cy" values="180;170;180" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- HAIR - spiky anime style -->
+  <!-- Back hair spikes -->
+  <path d="M65 95 C55 75 52 55 60 45 C65 38 70 50 70 65Z" fill="url(#hairGrad)"/>
+  <path d="M75 85 C68 65 67 42 75 35 C80 28 86 40 84 58Z" fill="url(#hairGrad)"/>
+  <path d="M90 80 C87 58 90 35 98 28 C103 22 108 35 105 55Z" fill="url(#hairGrad)"/>
+  <path d="M108 80 C110 58 116 36 124 30 C130 24 133 38 128 56Z" fill="url(#hairGrad)"/>
+  <path d="M120 85 C126 65 132 44 140 40 C146 36 147 50 142 65Z" fill="url(#hairGrad)"/>
+  <path d="M130 95 C140 78 148 60 154 56 C159 52 158 66 152 78Z" fill="url(#hairGrad)"/>
+  <!-- Leaf sprout on top of head -->
+  <path d="M98 40 C90 25 85 10 93 5 C98 1 103 8 100 25Z" fill="#2dcc70" filter="url(#softGlow)"/>
+  <path d="M102 40 C110 25 115 10 107 5 C102 1 97 8 100 25Z" fill="#1aaa55" opacity="0.85"/>
+  <!-- Stem -->
+  <line x1="100" y1="40" x2="100" y2="55" stroke="#27ae60" stroke-width="2"/>
+
+  <!-- HEAD / FACE -->
+  <ellipse cx="100" cy="105" rx="38" ry="42" fill="url(#skinGrad)"/>
+  <!-- Hair overlay (top and sides) -->
+  <ellipse cx="100" cy="80" rx="40" ry="22" fill="url(#hairGrad)"/>
+  <path d="M62 90 C58 105 60 120 65 130 C62 120 60 105 65 90Z" fill="url(#hairGrad)"/>
+  <path d="M138 90 C142 105 140 120 135 130 C138 120 140 105 135 90Z" fill="url(#hairGrad)"/>
+  <!-- Side bangs -->
+  <path d="M65 90 C58 95 57 108 62 118 C64 110 64 98 68 92Z" fill="url(#hairGrad)"/>
+  <path d="M135 90 C142 95 143 108 138 118 C136 110 136 98 132 92Z" fill="url(#hairGrad)"/>
+
+  <!-- EYES - anime style large -->
+  <!-- Left eye white -->
+  <ellipse cx="84" cy="107" rx="12" ry="14" fill="white"/>
+  <!-- Left eye iris -->
+  <ellipse cx="84" cy="109" rx="9" ry="11" fill="url(#eyeGrad)"/>
+  <!-- Left eye pupil -->
+  <ellipse cx="84" cy="111" rx="5" ry="6" fill="#003320"/>
+  <!-- Left eye highlights -->
+  <ellipse cx="87" cy="106" rx="3" ry="3.5" fill="white" opacity="0.9"/>
+  <circle cx="82" cy="113" r="1.5" fill="white" opacity="0.6"/>
+  <!-- Left eye top lash -->
+  <path d="M73 104 Q84 98 95 104" stroke="#1a3320" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Right eye white -->
+  <ellipse cx="116" cy="107" rx="12" ry="14" fill="white"/>
+  <!-- Right eye iris -->
+  <ellipse cx="116" cy="109" rx="9" ry="11" fill="url(#eyeGrad)"/>
+  <!-- Right eye pupil -->
+  <ellipse cx="116" cy="111" rx="5" ry="6" fill="#003320"/>
+  <!-- Right eye highlights -->
+  <ellipse cx="119" cy="106" rx="3" ry="3.5" fill="white" opacity="0.9"/>
+  <circle cx="114" cy="113" r="1.5" fill="white" opacity="0.6"/>
+  <!-- Right eye top lash -->
+  <path d="M105 104 Q116 98 127 104" stroke="#1a3320" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose (tiny) -->
+  <path d="M98 120 Q100 123 102 120" stroke="#d4956a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+  <!-- MOUTH - happy smile -->
+  <path d="M88 132 Q100 142 112 132" stroke="#cc6644" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Teeth hint -->
+  <path d="M90 133 Q100 138 110 133 Q100 140 90 133Z" fill="white" opacity="0.8"/>
+
+  <!-- Rosy cheeks -->
+  <ellipse cx="72" cy="122" rx="9" ry="6" fill="#ff9999" opacity="0.35"/>
+  <ellipse cx="128" cy="122" rx="9" ry="6" fill="#ff9999" opacity="0.35"/>
+
+  <!-- EARS -->
+  <ellipse cx="63" cy="108" rx="7" ry="9" fill="url(#skinGrad)"/>
+  <ellipse cx="137" cy="108" rx="7" ry="9" fill="url(#skinGrad)"/>
+
+  <!-- NECK -->
+  <rect x="92" y="145" width="16" height="14" rx="4" fill="url(#skinGrad)"/>
+
+  <!-- BODY / DRESS - leaf-style -->
+  <!-- Dress main body -->
+  <path d="M65 165 C60 175 58 200 62 220 C72 230 90 235 100 235 C110 235 128 230 138 220 C142 200 140 175 135 165 C125 158 115 155 100 155 C85 155 75 158 65 165Z"
+        fill="url(#dressGrad)"/>
+  <!-- Dress leaf decorations -->
+  <path d="M75 165 C65 155 60 145 68 138 C74 132 82 140 82 155Z" fill="#27ae60" opacity="0.8"/>
+  <path d="M92 158 C88 146 90 132 98 128 C104 124 108 134 105 150Z" fill="#2dcc70" opacity="0.8"/>
+  <path d="M108 158 C112 146 110 132 102 128 C96 124 92 134 95 150Z" fill="#27ae60" opacity="0.7"/>
+  <path d="M125 165 C135 155 140 145 132 138 C126 132 118 140 118 155Z" fill="#2dcc70" opacity="0.8"/>
+  <!-- Dress collar -->
+  <path d="M88 155 C90 148 100 145 100 145 C100 145 110 148 112 155 C108 152 100 150 92 152Z" fill="#1aaa55"/>
+
+  <!-- ARMS -->
+  <!-- Left arm -->
+  <path d="M68 170 C55 168 46 175 44 185 C42 195 50 202 60 198 C55 195 50 188 55 182 C58 177 65 175 68 178Z"
+        fill="url(#skinGrad)"/>
+  <!-- Left hand -->
+  <ellipse cx="43" cy="188" rx="8" ry="7" fill="url(#skinGrad)"/>
+  <!-- Left fingers -->
+  <path d="M36 185 C33 182 34 178 37 178 C39 178 39 182 37 185Z" fill="url(#skinGrad)"/>
+  <path d="M35 190 C31 190 30 186 33 184 C35 183 37 186 35 190Z" fill="url(#skinGrad)"/>
+
+  <!-- Right arm -->
+  <path d="M132 170 C145 168 154 175 156 185 C158 195 150 202 140 198 C145 195 150 188 145 182 C142 177 135 175 132 178Z"
+        fill="url(#skinGrad)"/>
+  <!-- Right hand (holding/waving) -->
+  <ellipse cx="157" cy="188" rx="8" ry="7" fill="url(#skinGrad)"/>
+  <path d="M164 185 C167 182 166 178 163 178 C161 178 161 182 163 185Z" fill="url(#skinGrad)"/>
+  <path d="M165 190 C169 190 170 186 167 184 C165 183 163 186 165 190Z" fill="url(#skinGrad)"/>
+
+  <!-- LEGS & FEET -->
+  <!-- Left leg -->
+  <path d="M82 230 C80 238 79 248 80 255 C82 258 86 258 88 255 C89 248 88 238 86 230Z" fill="url(#skinGrad)"/>
+  <!-- Left shoe (leaf-shaped) -->
+  <path d="M76 254 C74 258 76 264 82 265 C88 266 91 262 90 257 C88 261 84 262 80 260 C77 258 77 255 80 254Z"
+        fill="#1aaa55"/>
+
+  <!-- Right leg -->
+  <path d="M114 230 C116 238 117 248 116 255 C114 258 110 258 108 255 C107 248 108 238 112 230Z" fill="url(#skinGrad)"/>
+  <!-- Right shoe (leaf-shaped) -->
+  <path d="M120 254 C122 258 120 264 114 265 C108 266 105 262 106 257 C108 261 112 262 116 260 C119 258 119 255 116 254Z"
+        fill="#1aaa55"/>
+
+  <!-- Magic sparkles / glow dots -->
+  <g filter="url(#softGlow)">
+    <circle cx="50" cy="130" r="3" fill="#00d4ff" opacity="0.8"/>
+    <circle cx="152" cy="145" r="4" fill="#00ff88" opacity="0.7"/>
+    <circle cx="60" cy="200" r="2.5" fill="#00d4ff" opacity="0.6"/>
+    <circle cx="148" cy="195" r="3" fill="#00ff88" opacity="0.8"/>
+  </g>
+
+  <!-- Floating butterflies/sparkles -->
+  <path d="M38 165 C35 160 42 157 43 163 C44 157 51 160 48 165 C46 162 40 162 38 165Z" fill="#00d4ff" opacity="0.6">
+    <animateTransform attributeName="transform" type="translate" values="0,0;2,-5;0,0" dur="3s" repeatCount="indefinite"/>
+  </path>
+  <path d="M155 155 C152 150 159 147 160 153 C161 147 168 150 165 155 C163 152 157 152 155 155Z" fill="#00ff88" opacity="0.7">
+    <animateTransform attributeName="transform" type="translate" values="0,0;-2,-4;0,0" dur="2.5s" repeatCount="indefinite"/>
+  </path>
+</svg>

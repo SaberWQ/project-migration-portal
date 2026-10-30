@@ -1,0 +1,6 @@
+<!-- Icon: warning_threat | © 2026 SmartGrow AI Team -->
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 3 L22 20 L2 20 Z" fill="#ff3b5c" opacity="0.9"/>
+  <line x1="12" y1="10" x2="12" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="12" cy="18" r="1" fill="white"/>
+</svg>

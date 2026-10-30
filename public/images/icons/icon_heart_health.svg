@@ -1,0 +1,8 @@
+<!-- Icon: heart_health | © 2026 SmartGrow AI Team -->
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ff4da6"/><stop offset="100%" stop-color="#ff3b5c"/>
+  </linearGradient></defs>
+  <path d="M12 21 C12 21 4 15 4 9 C4 6.79 5.79 5 8 5 C9.5 5 10.83 5.82 11.5 7 L12 8 L12.5 7 C13.17 5.82 14.5 5 16 5 C18.21 5 20 6.79 20 9 C20 15 12 21 12 21Z"
+        fill="url(#hg)"/>
+</svg>

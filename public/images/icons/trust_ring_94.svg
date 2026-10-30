@@ -1,0 +1,25 @@
+<!-- Trust Score Ring 94% | © 2026 SmartGrow AI Team -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
+  <defs>
+    <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#00ff88"/>
+    </linearGradient>
+  </defs>
+  <!-- Track -->
+  <circle cx="70" cy="70" r="54" fill="none" stroke="#0a1525" stroke-width="10"/>
+  <!-- Progress arc -->
+  <circle cx="70" cy="70" r="54" fill="none"
+          stroke="url(#tg)" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="339.3"
+          stroke-dashoffset="20.4"
+          transform="rotate(-90 70 70)"/>
+  <!-- Center text -->
+  <text x="70" y="62" text-anchor="middle" font-family="Orbitron,sans-serif"
+        font-size="24" font-weight="900" fill="#00ff88">94%</text>
+  <text x="70" y="80" text-anchor="middle" font-family="sans-serif"
+        font-size="9" fill="#4a7090" letter-spacing="2">TRUST SCORE</text>
+  <text x="70" y="96" text-anchor="middle" font-family="sans-serif"
+        font-size="8" fill="#00ff88">✓ ЗАХИЩЕНО</text>
+</svg>

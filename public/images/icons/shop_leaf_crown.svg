@@ -1,0 +1,6 @@
+<!-- Shop Item: Leaf Crown | © 2026 SmartGrow AI Team -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="12" fill="#0d1e30" stroke="#27ae60" stroke-width="1" opacity="0.9"/>
+  <path d="M30 40 C20 30 15 20 20 12 C24 6 32 10 30 22 L30 40Z" fill="#2dcc70"/><path d="M50 40 C50 25 48 12 50 8 C52 4 56 6 55 18 L55 40Z" fill="#1aaa55"/><path d="M70 40 C80 30 85 20 80 12 C76 6 68 10 70 22 L70 40Z" fill="#2dcc70"/><path d="M20 40 L80 40 L75 60 L25 60Z" fill="#1a5c30"/><path d="M25 60 L75 60 L70 75 L30 75Z" fill="#155020"/>
+  <text x="50" y="93" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#8ab0c0">Leaf Crown</text>
+</svg>

@@ -1,0 +1,9 @@
+<!-- Icon: shield_trust | © 2026 SmartGrow AI Team -->
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#00ff88"/>
+  </linearGradient></defs>
+  <path d="M12 2 L4 6 L4 12 C4 16.41 7.72 20.59 12 22 C16.28 20.59 20 16.41 20 12 L20 6 Z"
+        fill="url(#sg)" opacity="0.85"/>
+  <path d="M9 12 L11 14 L15 10" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
