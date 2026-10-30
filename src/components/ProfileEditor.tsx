@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 
 export function ProfileEditor() {
@@ -7,6 +7,9 @@ export function ProfileEditor() {
   const [fullName, setFullName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [message, setMessage] = useState('');
+  
+  // Реф для прямого управления выбором файла
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getProfile();
@@ -18,7 +21,8 @@ export function ProfileEditor() {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
 
       if (authError || !user) {
-        setMessage('Будь ласка, увійдіть у свій акаунт.');
+        setMessage('Ошибка: пользователь не авторизован');
+        console.warn('Пользователь не найден в сессии Supabase');
         return;
       }
 
@@ -35,9 +39,10 @@ export function ProfileEditor() {
         setAvatarUrl(data.avatar_url || '');
       }
     } catch (err: any) {
-      console.error('Помилка завантаження профілю:', err.message);
+      console.error('Ошибка загрузки профиля:', err.message);
+      setMessage(`Ошибка загрузки: ${err.message}`);
     } finally {
-      setLoading(false); // Завжди вимикаємо індикатор завантаження
+      setLoading(false);
     }
   }
 
@@ -55,25 +60,24 @@ export function ProfileEditor() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        setMessage('Потрібно авторизуватися для завантаження фото.');
+        setMessage('Необходима авторизация');
         return;
       }
 
       const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
-      // Завантаження файлу в Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      // Отримання публічного URL зображення
       const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
       setAvatarUrl(data.publicUrl);
-      setMessage('Фото успішно завантажено!');
+      setMessage('Фото успешно загружено!');
     } catch (err: any) {
-      setMessage(`Помилка завантаження: ${err.message}`);
+      console.error('Ошибка при загрузке фото:', err);
+      setMessage(`Ошибка при загрузке: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -86,7 +90,7 @@ export function ProfileEditor() {
       setMessage('');
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Не авторизовано');
+      if (!user) throw new Error('Пользователь не авторизован');
 
       const { error } = await supabase.from('profiles').upsert({
         id: user.id,
@@ -96,61 +100,67 @@ export function ProfileEditor() {
       });
 
       if (error) throw error;
-      setMessage('Профіль успішно оновлено!');
+      setMessage('Профиль успешно сохранён!');
     } catch (err: any) {
-      setMessage(`Помилка збереження: ${err.message}`);
+      setMessage(`Ошибка сохранения: ${err.message}`);
     } finally {
       setLoading(false);
     }
   }
 
-  if (loading) return <p className="text-center p-4">Завантаження даних...</p>;
-
   return (
-    <form onSubmit={updateProfile} className="max-w-md mx-auto space-y-4 p-4 border rounded shadow-sm">
-      <h2 className="text-xl font-bold">Редагування профілю</h2>
+    <form onSubmit={updateProfile} className="max-w-md mx-auto space-y-4 p-4 border rounded shadow-sm bg-white">
+      <h2 className="text-xl font-bold text-center">Редактирование профиля</h2>
 
-      <div className="flex flex-col items-center space-y-2">
+      <div className="flex flex-col items-center space-y-3">
         {avatarUrl ? (
           <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full object-cover border" />
         ) : (
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
-            Немає фото
+            Нет фото
           </div>
         )}
 
-        <label className={`cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-          {uploading ? 'Завантаження...' : 'Змінити фото'}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={uploadAvatar}
-            disabled={uploading}
-            className="hidden"
-          />
-        </label>
+        {/* Скрытый инпут */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          onChange={uploadAvatar}
+          className="hidden"
+        />
+
+        {/* Явная кнопка с кликом через useRef */}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading || loading}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium disabled:opacity-50 cursor-pointer"
+        >
+          {uploading ? 'Загрузка...' : 'Изменить фото'}
+        </button>
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Ім'я / Псевдонім</label>
+        <label className="block text-sm font-medium mb-1">Имя / Псевдоним</label>
         <input
           type="text"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="w-full border p-2 rounded mt-1"
-          placeholder="Введіть ваше ім'я"
+          className="w-full border p-2 rounded"
+          placeholder="Введите ваше имя"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading || uploading}
-        className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded font-medium disabled:opacity-50"
+        className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded font-medium disabled:opacity-50 cursor-pointer"
       >
-        {loading ? 'Збереження...' : 'Зберегти профіль'}
+        {loading ? 'Сохранение...' : 'Сохранить профиль'}
       </button>
 
-      {message && <p className="text-sm text-center mt-2 text-gray-700">{message}</p>}
+      {message && <p className="text-sm text-center mt-2 font-medium text-gray-700">{message}</p>}
     </form>
   );
 }
