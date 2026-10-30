@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { type User } from '@supabase/supabase-js'
-import { Check, MessageCircle, Send, Star, ThumbsUp } from 'lucide-react'
-import { supabase } from '@/integrations/supabase/client' // Используем клиент из вашего проекта
+import { ArrowLeft, Check, MessageCircle, Send, Star, ThumbsUp } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
 
 export const Route = createFileRoute('/feedback')({
   component: FeedbackPage,
@@ -57,10 +57,22 @@ function FeedbackPage() {
     <main className="min-h-screen bg-[#f6f8f7] px-5 py-8 text-[#18322c] md:px-10 md:py-12">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <header className="flex items-center justify-between rounded-[28px] border border-[#dce8e2] bg-white/80 px-6 py-5 shadow-sm backdrop-blur md:px-8">
-          <div className="flex items-center gap-3">
-            <div className="grid size-10 place-items-center rounded-2xl bg-[#c8e86a] font-bold text-[#234d31]">S</div>
-            <span className="text-lg font-semibold tracking-tight">SmartGrow</span>
+          <div className="flex items-center gap-4">
+            {/* Кнопка повернення на головну */}
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 rounded-2xl border border-[#dce8e2] bg-white px-3.5 py-2 text-sm font-semibold text-[#21483e] transition hover:bg-[#eef5ef] cursor-pointer"
+            >
+              <ArrowLeft className="size-4" />
+              <span className="hidden sm:inline">На головну</span>
+            </Link>
+
+            <div className="flex items-center gap-3">
+              <div className="grid size-10 place-items-center rounded-2xl bg-[#c8e86a] font-bold text-[#234d31]">S</div>
+              <span className="text-lg font-semibold tracking-tight">SmartGrow</span>
+            </div>
           </div>
+
           <span className="rounded-full bg-[#eef5ef] px-4 py-2 text-sm font-medium text-[#557267]">Ваш голос важливий</span>
         </header>
 
@@ -87,9 +99,15 @@ function FeedbackPage() {
                 </div>
                 <h2 className="text-3xl font-semibold">Дякуємо за відгук</h2>
                 <p className="mt-3 max-w-sm text-[#6b8178]">Ми вже передали вашу реакцію команді. Кожен коментар допомагає нам рухатися вперед.</p>
-                <button onClick={() => { setSubmitted(false); setRating(0); setComment('') }} className="mt-8 rounded-full bg-[#21483e] px-6 py-3 font-semibold text-white transition hover:bg-[#173a31]">
-                  Залишити ще один
-                </button>
+                
+                <div className="mt-8 flex flex-wrap justify-center gap-3">
+                  <button onClick={() => { setSubmitted(false); setRating(0); setComment('') }} className="rounded-full bg-[#21483e] px-6 py-3 font-semibold text-white transition hover:bg-[#173a31] cursor-pointer">
+                    Залишити ще один
+                  </button>
+                  <Link to="/dashboard" className="rounded-full border border-[#dce8e2] bg-[#f6f8f7] px-6 py-3 font-semibold text-[#21483e] transition hover:bg-[#eef5ef]">
+                    Повернутися в сад
+                  </Link>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-8">
@@ -98,7 +116,7 @@ function FeedbackPage() {
                   <p className="mt-2 text-sm text-[#71847c]">Оцініть досвід від 1 до 5 зірок</p>
                   <div className="mt-5 flex gap-2" role="radiogroup" aria-label="Оцінка сервісу">
                     {[1, 2, 3, 4, 5].map((value) => (
-                      <button type="button" key={value} onClick={() => setRating(value)} aria-label={`${value} з 5`} aria-pressed={rating === value} className={`grid size-12 place-items-center rounded-2xl border transition ${rating >= value ? 'border-[#c8e86a] bg-[#e9f7d1] text-[#4f7d28]' : 'border-[#dce8e2] text-[#b8c6bf] hover:border-[#a9c9b5]'}`}>
+                      <button type="button" key={value} onClick={() => setRating(value)} aria-label={`${value} з 5`} aria-pressed={rating === value} className={`grid size-12 place-items-center rounded-2xl border transition cursor-pointer ${rating >= value ? 'border-[#c8e86a] bg-[#e9f7d1] text-[#4f7d28]' : 'border-[#dce8e2] text-[#b8c6bf] hover:border-[#a9c9b5]'}`}>
                         <Star className="size-6" fill={rating >= value ? 'currentColor' : 'none'} />
                       </button>
                     ))}
@@ -110,7 +128,7 @@ function FeedbackPage() {
                   <legend className="mb-3 text-sm font-semibold">Що саме оцінюєте?</legend>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((item) => (
-                      <button type="button" key={item} onClick={() => setCategory(item)} className={`rounded-full border px-4 py-2 text-sm transition ${category === item ? 'border-[#21483e] bg-[#21483e] text-white' : 'border-[#dce8e2] text-[#557267] hover:border-[#9dbbac]'}`}>
+                      <button type="button" key={item} onClick={() => setCategory(item)} className={`rounded-full border px-4 py-2 text-sm transition cursor-pointer ${category === item ? 'border-[#21483e] bg-[#21483e] text-white' : 'border-[#dce8e2] text-[#557267] hover:border-[#9dbbac]'}`}>
                         {item}
                       </button>
                     ))}
@@ -121,7 +139,7 @@ function FeedbackPage() {
                   <legend className="mb-3 text-sm font-semibold">Ваш настрій</legend>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {sentiments.map((item) => (
-                      <button type="button" key={item} onClick={() => setSentiment(item)} className={`rounded-xl border px-3 py-3 text-xs transition ${sentiment === item ? 'border-[#b4d85d] bg-[#f0f8de] font-semibold text-[#426a2e]' : 'border-[#dce8e2] text-[#71847c] hover:border-[#9dbbac]'}`}>
+                      <button type="button" key={item} onClick={() => setSentiment(item)} className={`rounded-xl border px-3 py-3 text-xs transition cursor-pointer ${sentiment === item ? 'border-[#b4d85d] bg-[#f0f8de] font-semibold text-[#426a2e]' : 'border-[#dce8e2] text-[#71847c] hover:border-[#9dbbac]'}`}>
                         {item}
                       </button>
                     ))}
@@ -139,7 +157,7 @@ function FeedbackPage() {
 
                 {status && <p role="alert" className="rounded-xl bg-[#fff5e8] px-4 py-3 text-sm text-[#936a36]">{status}</p>}
 
-                <button type="submit" disabled={saving} className="flex items-center justify-center gap-2 rounded-full bg-[#c8e86a] px-6 py-4 font-semibold text-[#21483e] transition hover:bg-[#b9dc5c] disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="submit" disabled={saving} className="flex items-center justify-center gap-2 rounded-full bg-[#c8e86a] px-6 py-4 font-semibold text-[#21483e] transition hover:bg-[#b9dc5c] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer">
                   {saving ? 'Надсилаємо…' : 'Надіслати відгук'} {!saving && <Send className="size-4" />}
                 </button>
 
