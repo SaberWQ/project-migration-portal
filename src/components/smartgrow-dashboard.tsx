@@ -49,9 +49,12 @@ export function SmartGrowDashboard() {
         .eq('id', user.id)
         .maybeSingle()
 
-      if (data) {
-        setProfile(data)
-      }
+      const emailPrefix = user.email ? user.email.split('@')[0] : 'Користувач'
+
+      setProfile({
+        full_name: data?.full_name || emailPrefix,
+        avatar_url: data?.avatar_url || '',
+      })
     } catch (err) {
       console.error('Помилка завантаження профілю:', err)
     }
@@ -73,7 +76,7 @@ export function SmartGrowDashboard() {
     setMessage('')
   }
 
-  const displayName = profile?.full_name || 'Ілля'
+  const displayName = profile?.full_name || 'Користувач'
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
@@ -156,7 +159,7 @@ function SettingsView({
   const [sound, setSound] = useState(true)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
-  const displayName = profile?.full_name || 'Ілля SmartGrow'
+  const displayName = profile?.full_name || 'Користувач'
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
