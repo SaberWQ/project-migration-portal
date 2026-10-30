@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 
 type View = 'home' | 'analytics' | 'ai' | 'tasks' | 'shop' | 'settings'
 type Language = 'Українська' | 'English' | 'Español' | 'Português'
+type ThemeOption = 'Світла' | 'Темна' | 'Системна'
 
 const translations = {
   'Українська': {
@@ -224,6 +225,36 @@ export function SmartGrowDashboard() {
   const [bought, setBought] = useState<number[]>([])
   const [language, setLanguage] = useState<Language>('Українська')
 
+  // Управление темой оформления
+  const [theme, setTheme] = useState<ThemeOption>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('smartgrow_theme') as ThemeOption) || 'Світла'
+    }
+    return 'Світла'
+  })
+
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('smartgrow_theme', theme)
+    const checkDark = () => {
+      if (theme === 'Темна') return true
+      if (theme === 'Системна') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+      }
+      return false
+    }
+
+    const dark = checkDark()
+    setIsDark(dark)
+
+    if (dark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [theme])
+
   const t = translations[language] || translations['Українська']
 
   const [chat, setChat] = useState<{ from: 'user' | 'leafy'; text: string }[]>([
@@ -285,15 +316,15 @@ export function SmartGrowDashboard() {
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
-    <main className="min-h-screen bg-[#f7f8f3] text-[#17372d]">
+    <main className={`min-h-screen transition-colors duration-200 ${isDark ? 'bg-[#121c18] text-[#e1ece6]' : 'bg-[#f7f8f3] text-[#17372d]'}`}>
       <div className="mx-auto flex min-h-screen max-w-[1280px] flex-col lg:flex-row">
-        <aside className="hidden w-[250px] shrink-0 flex-col border-r border-[#dfe8df] bg-[#f1f5ed] px-7 py-8 lg:flex">
+        <aside className={`hidden w-[250px] shrink-0 flex-col border-r px-7 py-8 lg:flex ${isDark ? 'border-[#263a32] bg-[#172520]' : 'border-[#dfe8df] bg-[#f1f5ed]'}`}>
           <Brand />
           <nav className="mt-14 flex flex-col gap-2" aria-label="Main Navigation">
-            {navItems.map((item) => <NavItem key={item.id} {...item} active={view === item.id} onClick={() => setView(item.id)} />)}
+            {navItems.map((item) => <NavItem key={item.id} {...item} active={view === item.id} isDark={isDark} onClick={() => setView(item.id)} />)}
           </nav>
-          <div className="mt-auto rounded-3xl bg-[#dfeee0] p-5">
-            <Sprout className="size-6 text-[#36765d]" />
+          <div className={`mt-auto rounded-3xl p-5 ${isDark ? 'bg-[#1d332a]' : 'bg-[#dfeee0]'}`}>
+            <Sprout className="size-6 text-[#8ac79b]" />
             <p className="mt-5 text-sm font-semibold leading-5">Smart care made simple.</p>
           </div>
         </aside>
@@ -302,7 +333,7 @@ export function SmartGrowDashboard() {
           <header className="flex items-center justify-between">
             <div className="lg:hidden"><Brand compact /></div>
             <div className="hidden lg:block">
-              <p className="text-sm font-medium text-[#739084]">Wednesday, Oct 21</p>
+              <p className={`text-sm font-medium ${isDark ? 'text-[#8da59a]' : 'text-[#739084]'}`}>Wednesday, Oct 21</p>
               <h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{t.greeting}, {displayName}</h1>
             </div>
             
@@ -312,12 +343,12 @@ export function SmartGrowDashboard() {
                 <span className="hidden sm:inline">{t.leaveFeedback}</span>
               </Link>
               
-              <button aria-label="Notifications" onClick={() => setNotification(t.noNotifications)} className="relative grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161]">
+              <button aria-label="Notifications" onClick={() => setNotification(t.noNotifications)} className={`relative grid size-10 place-items-center rounded-full border ${isDark ? 'border-[#2a3d35] bg-[#1a2823] text-[#8da59a]' : 'border-[#dfe8df] bg-white text-[#4d7161]'}`}>
                 <Bell className="size-[18px]" />
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" />
               </button>
 
-              <button aria-label="Menu" onClick={() => setView('home')} className="grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161] lg:hidden">
+              <button aria-label="Menu" onClick={() => setView('home')} className={`grid size-10 place-items-center rounded-full border ${isDark ? 'border-[#2a3d35] bg-[#1a2823] text-[#8da59a]' : 'border-[#dfe8df] bg-white text-[#4d7161]'} lg:hidden`}>
                 <Menu className="size-[18px]" />
               </button>
 
@@ -332,34 +363,36 @@ export function SmartGrowDashboard() {
           </header>
 
           {notification && <div className="mt-4 flex items-center justify-between rounded-xl bg-[#e4f0df] px-4 py-3 text-sm text-[#39795d]"><span className="flex items-center gap-2"><Check className="size-4" />{notification}</span><button onClick={() => setNotification('')} aria-label="Close"><X className="size-4" /></button></div>}
-          {view === 'home' && <HomeView autoMode={autoMode} setAutoMode={setAutoMode} pumpRunning={pumpRunning} runPump={runPump} setView={setView} lastUpdated={lastUpdated} t={t} />}
-          {view === 'analytics' && <AnalyticsView />}
-          {view === 'ai' && <AiView chat={chat} message={message} setMessage={setMessage} sendMessage={sendMessage} />}
+          {view === 'home' && <HomeView autoMode={autoMode} setAutoMode={setAutoMode} pumpRunning={pumpRunning} runPump={runPump} setView={setView} lastUpdated={lastUpdated} t={t} isDark={isDark} />}
+          {view === 'analytics' && <AnalyticsView isDark={isDark} />}
+          {view === 'ai' && <AiView chat={chat} message={message} setMessage={setMessage} sendMessage={sendMessage} isDark={isDark} />}
           {view === 'tasks' && <TasksView completed={completed} setCompleted={setCompleted} setCoins={setCoins} />}
           {view === 'shop' && <ShopView coins={coins} bought={bought} setBought={setBought} setCoins={setCoins} />}
-          {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} autoMode={autoMode} setAutoMode={setAutoMode} profile={profile} onProfileUpdate={fetchProfile} t={t} />}
+          {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} autoMode={autoMode} setAutoMode={setAutoMode} profile={profile} onProfileUpdate={fetchProfile} t={t} isDark={isDark} />}
         </section>
       </div>
-      <nav className="fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-md items-center justify-around rounded-2xl border border-[#deeadf] bg-white/95 p-2 shadow-[0_12px_35px_rgba(32,75,53,0.12)] backdrop-blur lg:hidden">{navItems.slice(0, 5).map((item) => <MobileNavItem key={item.id} {...item} active={view === item.id} onClick={() => setView(item.id)} />)}</nav>
+      <nav className={`fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-md items-center justify-around rounded-2xl border p-2 shadow-lg backdrop-blur lg:hidden ${isDark ? 'border-[#2a3d35] bg-[#1a2823]/95' : 'border-[#deeadf] bg-white/95'}`}>{navItems.slice(0, 5).map((item) => <MobileNavItem key={item.id} {...item} active={view === item.id} isDark={isDark} onClick={() => setView(item.id)} />)}</nav>
     </main>
   )
 }
 
-function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUpdated, t }: { autoMode: boolean; setAutoMode: (v: boolean) => void; pumpRunning: boolean; runPump: () => void; setView: (v: View) => void; lastUpdated: string; t: typeof translations['Українська'] }) {
+function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUpdated, t, isDark }: { autoMode: boolean; setAutoMode: (v: boolean) => void; pumpRunning: boolean; runPump: () => void; setView: (v: View) => void; lastUpdated: string; t: typeof translations['Українська']; isDark: boolean }) {
   const readings = [
     { label: t.soil, value: '42', unit: '%', icon: Droplets, detail: t.optimal },
     { label: t.temp, value: '22.5', unit: '°C', icon: Thermometer, detail: t.comfortable },
     { label: t.air, value: '58', unit: '%', icon: Waves, detail: t.normal },
   ]
 
+  const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'
+
   return (
     <>
       <div className="mt-8 flex items-end justify-between">
         <div>
-          <p className="text-sm font-medium text-[#739084]">{t.myPlant}</p>
+          <p className={`text-sm font-medium ${isDark ? 'text-[#8da59a]' : 'text-[#739084]'}`}>{t.myPlant}</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em]">Монстера</h2>
         </div>
-        <button onClick={() => setView('settings')} className="flex items-center gap-1 text-sm font-semibold text-[#4b8065]">
+        <button onClick={() => setView('settings')} className="flex items-center gap-1 text-sm font-semibold text-[#5cb887] cursor-pointer">
           {t.change} <ChevronRight className="size-4" />
         </button>
       </div>
@@ -385,17 +418,17 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
           <div className="absolute -right-10 -top-16 size-64 rounded-full border-[28px] border-white/5" />
         </div>
 
-        <div className="rounded-[28px] bg-[#e4f0df] p-6 sm:p-8">
+        <div className={`rounded-[28px] p-6 sm:p-8 ${isDark ? 'bg-[#183328] text-[#d1e8dc]' : 'bg-[#e4f0df] text-[#17372d]'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-[#668677]">{t.autoMode}</p>
+              <p className={`text-sm ${isDark ? 'text-[#8da59a]' : 'text-[#668677]'}`}>{t.autoMode}</p>
               <p className="mt-2 text-2xl font-semibold">{t.autoModeDesc}</p>
             </div>
-            <button onClick={() => setAutoMode(!autoMode)} aria-pressed={autoMode} className={`relative h-7 w-12 rounded-full p-1 transition-colors ${autoMode ? 'bg-[#39795d]' : 'bg-[#aebdb2]'}`}>
+            <button onClick={() => setAutoMode(!autoMode)} aria-pressed={autoMode} className={`relative h-7 w-12 rounded-full p-1 cursor-pointer transition-colors ${autoMode ? 'bg-[#39795d]' : 'bg-[#aebdb2]'}`}>
               <span className={`block size-5 rounded-full bg-white transition-transform ${autoMode ? 'translate-x-5' : ''}`} />
             </button>
           </div>
-          <p className="mt-8 text-sm leading-6 text-[#668677]">{t.autoModeInfo}</p>
+          <p className={`mt-8 text-sm leading-6 ${isDark ? 'text-[#a3beb1]' : 'text-[#668677]'}`}>{t.autoModeInfo}</p>
         </div>
       </div>
 
@@ -406,48 +439,48 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
 
       <div className="mt-3 grid grid-cols-3 gap-3 sm:gap-4">
         {readings.map(({ label, value, unit, icon: Icon, detail }) => (
-          <div key={label} className="rounded-2xl border border-[#e3ebe3] bg-white p-4 sm:p-5">
+          <div key={label} className={`rounded-2xl border p-4 sm:p-5 ${cardBg}`}>
             <div className="grid size-9 place-items-center rounded-xl bg-[#e1f2e4] text-[#438463]"><Icon className="size-[18px]" /></div>
-            <p className="mt-5 text-xs text-[#789084]">{label}</p>
-            <p className="mt-1 text-xl font-semibold sm:text-2xl">{value}<span className="ml-0.5 text-sm font-medium text-[#789084]">{unit}</span></p>
+            <p className={`mt-5 text-xs ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{label}</p>
+            <p className="mt-1 text-xl font-semibold sm:text-2xl">{value}<span className={`ml-0.5 text-sm font-medium ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{unit}</span></p>
             <p className="mt-2 text-[11px] font-medium text-[#57916f]">{detail}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-8 grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
-        <div className="rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6">
+        <div className={`rounded-[24px] border p-5 sm:p-6 ${cardBg}`}>
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-semibold">{t.soilMoisture}</h2>
-              <p className="mt-1 text-xs text-[#789084]">{t.last7days}</p>
+              <p className={`mt-1 text-xs ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{t.last7days}</p>
             </div>
             <span className="rounded-full bg-[#e6f3e8] px-3 py-1 text-xs font-semibold text-[#438463]">+8.4%</span>
           </div>
           <div className="mt-8 flex h-32 items-end gap-2 sm:gap-4">
             {week.map((value, index) => (
               <div key={index} className="flex flex-1 flex-col items-center gap-2">
-                <div className="relative w-full rounded-t-lg bg-[#e9f3e9]" style={{ height: `${value - 1.7}px`, maxHeight: 96 }}>
+                <div className={`relative w-full rounded-t-lg ${isDark ? 'bg-[#22382e]' : 'bg-[#e9f3e9]'}`} style={{ height: `${value - 1.7}px`, maxHeight: 96 }}>
                   <div className="absolute inset-x-0 bottom-0 rounded-t-lg bg-[#75b886]" style={{ height: `${Math.max(35, value * 1.3)}%` }} />
                 </div>
-                <span className="text-[10px] text-[#91a59b]">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][index]}</span>
+                <span className={`text-[10px] ${isDark ? 'text-[#8da59a]' : 'text-[#91a59b]'}`}>{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][index]}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-[24px] bg-[#f1e9d8] p-5 sm:p-6">
-          <p className="text-sm font-medium text-[#94774b]">{t.waterSaved}</p>
-          <p className="mt-3 text-3xl font-semibold text-[#5b4931]">1.8 <span className="text-sm font-medium">L</span></p>
-          <p className="mt-8 text-xs leading-5 text-[#94774b]">{t.waterSavedDesc}</p>
+        <div className={`rounded-[24px] p-5 sm:p-6 ${isDark ? 'bg-[#2a2419] text-[#e0cfb8]' : 'bg-[#f1e9d8] text-[#5b4931]'}`}>
+          <p className="text-sm font-medium opacity-80">{t.waterSaved}</p>
+          <p className="mt-3 text-3xl font-semibold">1.8 <span className="text-sm font-medium">L</span></p>
+          <p className="mt-8 text-xs leading-5 opacity-80">{t.waterSavedDesc}</p>
         </div>
       </div>
 
-      <div className="mt-8 rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6">
+      <div className={`mt-8 rounded-[24px] border p-5 sm:p-6 ${cardBg}`}>
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-semibold">{t.quickAction}</h2>
-            <p className="mt-1 text-xs text-[#789084]">{t.manualControl}</p>
+            <p className={`mt-1 text-xs ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{t.manualControl}</p>
           </div>
           <Zap className="size-5 text-[#729184]" />
         </div>
@@ -456,7 +489,7 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
             <Droplets className="size-5" />
             {pumpRunning ? t.wateringProgress : t.water5sec}
           </button>
-          <button onClick={() => setView('settings')} className="flex items-center justify-center gap-3 rounded-2xl bg-[#f4f7f2] px-5 py-4 text-sm font-semibold text-[#3e6c57] cursor-pointer">
+          <button onClick={() => setView('settings')} className={`flex items-center justify-center gap-3 rounded-2xl px-5 py-4 text-sm font-semibold cursor-pointer ${isDark ? 'bg-[#22382e] text-[#82cca0]' : 'bg-[#f4f7f2] text-[#3e6c57]'}`}>
             <Lightbulb className="size-5" />
             {t.lightControl}
           </button>
@@ -466,39 +499,45 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
   )
 }
 
-function AnalyticsView() { return <Page title="Analytics" subtitle="Sensor metrics history"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ n: '22.5°C', l: 'Temperature' }, { n: '58%', l: 'Air Humidity' }, { n: '42%', l: 'Soil Moisture' }, { n: '6.2', l: 'pH Level' }].map((x) => <div key={x.l} className="rounded-2xl border border-[#e3ebe3] bg-white p-5"><p className="text-2xl font-semibold">{x.n}</p><p className="mt-2 text-sm text-[#789084]">{x.l}</p><span className="mt-4 inline-flex rounded-full bg-[#e6f3e8] px-2 py-1 text-xs text-[#438463]">Online</span></div>)}</div></Page> }
-function AiView({ chat, message, setMessage, sendMessage }: { chat: { from: string; text: string }[]; message: string; setMessage: (v: string) => void; sendMessage: () => void }) { return <Page title="Leafy AI" subtitle="Smart assistant"><div className="flex min-h-[400px] flex-col rounded-[24px] border border-[#e3ebe3] bg-white p-5"><div className="flex-1 space-y-4">{chat.map((m, i) => <div key={i} className={`flex gap-3 ${m.from === 'user' ? 'flex-row-reverse' : ''}`}><div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#e1f2e4]"><Sprout className="size-5 text-[#438463]" /></div><div className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-6 ${m.from === 'user' ? 'bg-[#2f7056] text-white' : 'bg-[#f1f5ed] text-[#315847]'}`}>{m.text}</div></div>)}</div><div className="mt-5 flex gap-2"><input value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Ask Leafy..." className="flex-1 rounded-xl border border-[#dfe8df] px-4 py-3 text-sm outline-none" /><button onClick={sendMessage} className="rounded-xl bg-[#2f7056] px-5 text-sm font-semibold text-white">Send</button></div></div></Page> }
+function AnalyticsView({ isDark }: { isDark?: boolean }) { const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'; return <Page title="Analytics" subtitle="Sensor metrics history"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ n: '22.5°C', l: 'Temperature' }, { n: '58%', l: 'Air Humidity' }, { n: '42%', l: 'Soil Moisture' }, { n: '6.2', l: 'pH Level' }].map((x) => <div key={x.l} className={`rounded-2xl border p-5 ${cardBg}`}><p className="text-2xl font-semibold">{x.n}</p><p className="mt-2 text-sm opacity-70">{x.l}</p><span className="mt-4 inline-flex rounded-full bg-[#e6f3e8] px-2 py-1 text-xs text-[#438463]">Online</span></div>)}</div></Page> }
+function AiView({ chat, message, setMessage, sendMessage, isDark }: { chat: { from: string; text: string }[]; message: string; setMessage: (v: string) => void; sendMessage: () => void; isDark?: boolean }) { const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'; return <Page title="Leafy AI" subtitle="Smart assistant"><div className={`flex min-h-[400px] flex-col rounded-[24px] border p-5 ${cardBg}`}><div className="flex-1 space-y-4">{chat.map((m, i) => <div key={i} className={`flex gap-3 ${m.from === 'user' ? 'flex-row-reverse' : ''}`}><div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#e1f2e4]"><Sprout className="size-5 text-[#438463]" /></div><div className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-6 ${m.from === 'user' ? 'bg-[#2f7056] text-white' : isDark ? 'bg-[#263c32] text-[#d6eade]' : 'bg-[#f1f5ed] text-[#315847]'}`}>{m.text}</div></div>)}</div><div className="mt-5 flex gap-2"><input value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Ask Leafy..." className={`flex-1 rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'border-[#2a3d35] bg-[#121c18]' : 'border-[#dfe8df] bg-white'}`} /><button onClick={sendMessage} className="rounded-xl bg-[#2f7056] px-5 text-sm font-semibold text-white cursor-pointer">Send</button></div></div></Page> }
 function TasksView({ completed, setCompleted, setCoins }: { completed: string[]; setCompleted: (v: string[]) => void; setCoins: (v: number) => void }) { return <Page title="Quests" subtitle="Earn rewards"><div className="rounded-[24px] bg-[#1e493b] p-6 text-white"><h2 className="text-2xl font-semibold">Leafy needs water</h2></div></Page> }
 function ShopView({ coins, bought, setBought, setCoins }: { coins: number; bought: number[]; setBought: (v: number[]) => void; setCoins: (v: number) => void }) { return <Page title="Shop" subtitle="Skins & Tokens"><div className="rounded-2xl bg-[#f1e9d8] p-5"><p className="font-semibold text-[#5b4931]">Balance: {coins} coins</p></div></Page> }
 
 function SettingsView({ 
   language, 
   setLanguage, 
+  theme,
+  setTheme,
   autoMode, 
   setAutoMode, 
   profile, 
   onProfileUpdate,
-  t
+  t,
+  isDark
 }: { 
   language: Language; 
   setLanguage: (v: Language) => void; 
+  theme: ThemeOption;
+  setTheme: (v: ThemeOption) => void;
   autoMode: boolean; 
   setAutoMode: (v: boolean) => void;
   profile: { full_name?: string; avatar_url?: string } | null;
   onProfileUpdate: () => void;
-  t: typeof translations['Українська']
+  t: typeof translations['Українська'];
+  isDark: boolean;
 }) { 
-  const [theme, setTheme] = useState('Світла')
   const [sound, setSound] = useState(true)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   const displayName = profile?.full_name || 'User'
   const initials = displayName.slice(0, 2).toUpperCase()
+  const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'
 
   return (
     <Page title={t.profileSettings} subtitle={t.profileSubtitle}>
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-[#e3ebe3] bg-white p-5">
+        <div className={`rounded-2xl border p-5 ${cardBg}`}>
           <div className="flex flex-wrap items-center gap-4">
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="Avatar" className="size-16 rounded-full object-cover border border-[#dfe8df]" />
@@ -510,14 +549,14 @@ function SettingsView({
 
             <div>
               <p className="font-semibold">{displayName}</p>
-              <p className="text-sm text-[#789084]">{t.profileSynced}</p>
+              <p className={`text-sm ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{t.profileSynced}</p>
             </div>
 
             <div className="ml-auto flex items-center gap-2">
               <button 
                 type="button"
                 onClick={() => setIsProfileModalOpen(true)}
-                className="rounded-lg border border-[#dfe8df] px-3 py-2 text-xs font-semibold hover:bg-gray-50 transition cursor-pointer"
+                className={`rounded-lg border px-3 py-2 text-xs font-semibold transition cursor-pointer ${isDark ? 'border-[#2a3d35] hover:bg-[#22382e]' : 'border-[#dfe8df] hover:bg-gray-50'}`}
               >
                 {t.changePhoto}
               </button>
@@ -525,9 +564,9 @@ function SettingsView({
             </div>
           </div>
 
-          <button className="mt-5 w-full rounded-xl border border-[#e3ebe3] px-4 py-3 text-left text-sm cursor-pointer">
+          <button className={`mt-5 w-full rounded-xl border p-4 text-left text-sm cursor-pointer ${isDark ? 'border-[#2a3d35]' : 'border-[#e3ebe3]'}`}>
             <span className="font-semibold">{t.sessionsAndSecurity}</span>
-            <span className="mt-1 block text-xs text-[#789084]">{t.manageDevices}</span>
+            <span className={`mt-1 block text-xs ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{t.manageDevices}</span>
           </button>
         </div>
 
@@ -538,7 +577,7 @@ function SettingsView({
                 key="language" 
                 value={language} 
                 onChange={(e) => setLanguage(e.target.value as Language)} 
-                className="rounded-lg border border-[#dfe8df] bg-white px-3 py-2 text-sm cursor-pointer"
+                className={`rounded-lg border px-3 py-2 text-sm cursor-pointer ${isDark ? 'border-[#2a3d35] bg-[#121c18] text-white' : 'border-[#dfe8df] bg-white text-black'}`}
               >
                 <option value="Українська">Українська</option>
                 <option value="English">English</option>
@@ -550,12 +589,12 @@ function SettingsView({
               <select 
                 key="theme" 
                 value={theme} 
-                onChange={(e) => setTheme(e.target.value)} 
-                className="rounded-lg border border-[#dfe8df] bg-white px-3 py-2 text-sm cursor-pointer"
+                onChange={(e) => setTheme(e.target.value as ThemeOption)} 
+                className={`rounded-lg border px-3 py-2 text-sm cursor-pointer ${isDark ? 'border-[#2a3d35] bg-[#121c18] text-white' : 'border-[#dfe8df] bg-white text-black'}`}
               >
-                <option>{t.themeLight}</option>
-                <option>{t.themeDark}</option>
-                <option>{t.themeSystem}</option>
+                <option value="Світла">{t.themeLight}</option>
+                <option value="Темна">{t.themeDark}</option>
+                <option value="Системна">{t.themeSystem}</option>
               </select>
             ],
             [t.leafySounds, sound ? t.enabled : t.disabled, 
@@ -578,10 +617,10 @@ function SettingsView({
               </button>
             ]
           ].map(([title, desc, control]) => (
-            <div key={String(title)} className="flex items-center justify-between rounded-2xl border border-[#e3ebe3] bg-white p-5">
+            <div key={String(title)} className={`flex items-center justify-between rounded-2xl border p-5 ${cardBg}`}>
               <div>
                 <p className="font-semibold">{title}</p>
-                <p className="mt-1 text-sm text-[#789084]">{desc}</p>
+                <p className={`mt-1 text-sm ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>{desc}</p>
               </div>
               {control}
             </div>
@@ -589,16 +628,16 @@ function SettingsView({
         </div>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[#e3ebe3] bg-white p-5">
+      <div className={`mt-5 rounded-2xl border p-5 ${cardBg}`}>
         <p className="font-semibold">{t.translatorTitle}</p>
-        <p className="mt-1 text-sm text-[#789084]">
+        <p className={`mt-1 text-sm ${isDark ? 'text-[#8da59a]' : 'text-[#789084]'}`}>
           {t.translatorDesc}
         </p>
       </div>
 
       {isProfileModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+          <div className={`relative w-full max-w-md rounded-2xl p-6 shadow-xl ${isDark ? 'bg-[#1a2823] text-white border border-[#2a3d35]' : 'bg-white text-black'}`}>
             <button
               type="button"
               onClick={() => {
@@ -617,7 +656,7 @@ function SettingsView({
   )
 }
 
-function Page({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <div className="mt-8"><p className="text-sm font-medium text-[#739084]">SmartGrow SecureAI</p><h2 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{title}</h2><p className="mt-2 text-sm text-[#789084]">{subtitle}</p><div className="mt-6">{children}</div></div> }
-function Brand({ compact = false }: { compact?: boolean }) { return <div className="flex items-center gap-2"><div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white"><Sprout className="size-5" /></div>{!compact && <div><p className="font-semibold tracking-[-0.03em]">SmartGrow</p><p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[#7b9889]">AI garden</p></div>}</div> }
-function NavItem({ icon: Icon, label, active, onClick }: { icon: typeof Home; label: string; active: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition cursor-pointer ${active ? 'bg-[#dcecdf] text-[#2f7056]' : 'text-[#789084] hover:bg-white'}`}><Icon className="size-[18px]" />{label}</button> }
-function MobileNavItem({ icon: Icon, label, active, onClick }: { icon: typeof Home; label: string; active: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex min-w-16 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[10px] font-semibold cursor-pointer ${active ? 'bg-[#e4f1e5] text-[#2f7056]' : 'text-[#81958b]'}`}><Icon className="size-[18px]" />{label}</button> }
+function Page({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <div className="mt-8"><p className="text-sm font-medium opacity-80">SmartGrow SecureAI</p><h2 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{title}</h2><p className="mt-2 text-sm opacity-70">{subtitle}</p><div className="mt-6">{children}</div></div> }
+function Brand({ compact = false }: { compact?: boolean }) { return <div className="flex items-center gap-2"><div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white"><Sprout className="size-5" /></div>{!compact && <div><p className="font-semibold tracking-[-0.03em]">SmartGrow</p><p className="text-[10px] font-medium uppercase tracking-[0.18em] opacity-70">AI garden</p></div>}</div> }
+function NavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a] hover:bg-[#22382e]' : 'text-[#789084] hover:bg-white'}`}><Icon className="size-[18px]" />{label}</button> }
+function MobileNavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex min-w-16 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[10px] font-semibold cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a]' : 'text-[#81958b]'}`}><Icon className="size-[18px]" />{label}</button> }
