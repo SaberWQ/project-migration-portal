@@ -862,6 +862,6 @@ function Brand({ compact = false, onClick }: { compact?: boolean; onClick?: () =
     </button>
   ) 
 }
-//..
+
 function NavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a] hover:bg-[#22382e]' : 'text-[#789084] hover:bg-white'}`}><Icon className="size-[18px]" />{label}</button> }
 function MobileNavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex min-w-16 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[10px] font-semibold cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a]' : 'text-[#81958b]'}`}><Icon className="size-[18px]" />{label}</button> }
