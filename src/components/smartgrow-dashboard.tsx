@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, Menu, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
+import { ProfileEditor } from '@/components/ProfileEditor'
 
 type View = 'home' | 'analytics' | 'ai' | 'tasks' | 'shop' | 'settings'
 
@@ -99,6 +100,7 @@ function ShopView({ coins, bought, setBought, setCoins }: { coins: number; bough
 function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { language: string; setLanguage: (v: string) => void; autoMode: boolean; setAutoMode: (v: boolean) => void }) { 
   const [theme, setTheme] = useState('Світла')
   const [sound, setSound] = useState(true)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   return (
     <Page title="Налаштування профілю" subtitle="Мова, тема, звуки та персональні дані SmartGrow">
@@ -113,10 +115,14 @@ function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { langua
               <p className="text-sm text-[#789084]">Профіль синхронізовано</p>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <button className="rounded-lg border border-[#dfe8df] px-3 py-2 text-xs font-semibold">
+              {/* При клике открывается модальное окно */}
+              <button 
+                type="button"
+                onClick={() => setIsProfileModalOpen(true)}
+                className="rounded-lg border border-[#dfe8df] px-3 py-2 text-xs font-semibold hover:bg-gray-50 transition cursor-pointer"
+              >
                 Змінити фото
               </button>
-              {/* Кнопка выхода */}
               <LogoutButton />
             </div>
           </div>
@@ -150,6 +156,22 @@ function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { langua
           Українська, English, Español та Português доступні для інтерфейсу й відповідей бота.
         </p>
       </div>
+
+      {/* Всплывающее модальное окно с редактором профиля */}
+      {isProfileModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <button
+              type="button"
+              onClick={() => setIsProfileModalOpen(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              <X className="size-5" />
+            </button>
+            <ProfileEditor />
+          </div>
+        </div>
+      )}
     </Page>
   )
 }
