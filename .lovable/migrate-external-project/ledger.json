@@ -1,8 +1,0 @@
-[
-{"capability":"code","source":"Next.js single-page dashboard (components/smartgrow-dashboard.tsx)","outcome":"migrate","status":"verified","next_action":"none"},
-{"capability":"assets","source":"public/ icons, Leafy images, manifest","outcome":"migrate","status":"verified","next_action":"none"},
-{"capability":"schema/records","source":"none — all data is in-memory demo state","outcome":"not_present","status":"verified","next_action":"none"},
-{"capability":"auth","source":"none","outcome":"not_present","status":"verified","next_action":"none"},
-{"capability":"analytics","source":"@vercel/analytics (Vercel platform)","outcome":"dropped_platform_specific","status":"accepted","next_action":"Lovable built-in analytics covers this after publish"},
-{"capability":"legacy repo snapshot","source":".repo-inspect (older Next+Django version, not wired to the app)","outcome":"not_migrated","status":"accepted","next_action":"ask user if needed"}
-]
