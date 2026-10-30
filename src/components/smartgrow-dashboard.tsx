@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
+import { Activity, Bell, Bot, Check, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
 import { ProfileEditor } from '@/components/ProfileEditor'
 import { supabase } from '@/lib/supabase'
@@ -16,7 +16,6 @@ const translations = {
     leaveFeedback: 'Залишити відгук',
     noNotifications: 'Нових сповіщень немає',
     myPlant: 'Моя рослина',
-    change: 'Змінити',
     systemStatus: 'Стан системи',
     allGood: 'Все працює добре',
     lastSync: 'Остання синхронізація',
@@ -66,7 +65,6 @@ const translations = {
     leaveFeedback: 'Leave feedback',
     noNotifications: 'No new notifications',
     myPlant: 'My plant',
-    change: 'Change',
     systemStatus: 'System status',
     allGood: 'All working well',
     lastSync: 'Last sync',
@@ -116,7 +114,6 @@ const translations = {
     leaveFeedback: 'Dejar comentarios',
     noNotifications: 'Sin notificaciones nuevas',
     myPlant: 'Mi planta',
-    change: 'Cambiar',
     systemStatus: 'Estado del sistema',
     allGood: 'Todo funciona bien',
     lastSync: 'Última sincronización',
@@ -166,7 +163,6 @@ const translations = {
     leaveFeedback: 'Deixar feedback',
     noNotifications: 'Sem novas notificações',
     myPlant: 'Minha planta',
-    change: 'Alterar',
     systemStatus: 'Status do sistema',
     allGood: 'Tudo funcionando bem',
     lastSync: 'Última sincronização',
@@ -203,7 +199,7 @@ const translations = {
     leafySounds: 'Sons do Leafy',
     autoWatering: 'Irrigação automática',
     enabled: 'Ativado',
-    disabled: 'Desativado',
+    disabled: 'Desactivado',
     themeLight: 'Claro',
     themeDark: 'Escuro',
     themeSystem: 'Sistema',
@@ -317,7 +313,7 @@ export function SmartGrowDashboard() {
     <main className={`min-h-screen transition-colors duration-200 ${isDark ? 'bg-[#121c18] text-[#e1ece6]' : 'bg-[#f7f8f3] text-[#17372d]'}`}>
       <div className="mx-auto flex min-h-screen max-w-[1280px] flex-col lg:flex-row">
         <aside className={`hidden w-[250px] shrink-0 flex-col border-r px-7 py-8 lg:flex ${isDark ? 'border-[#263a32] bg-[#172520]' : 'border-[#dfe8df] bg-[#f1f5ed]'}`}>
-          <Brand />
+          <Brand onClick={() => setView('home')} />
           <nav className="mt-14 flex flex-col gap-2" aria-label="Main Navigation">
             {navItems.map((item) => <NavItem key={item.id} {...item} active={view === item.id} isDark={isDark} onClick={() => setView(item.id)} />)}
           </nav>
@@ -329,7 +325,9 @@ export function SmartGrowDashboard() {
 
         <section className="flex-1 px-5 pb-28 pt-6 sm:px-8 lg:px-12 lg:pb-10 lg:pt-10">
           <header className="flex items-center justify-between">
-            <div className="lg:hidden"><Brand compact /></div>
+            <div className="lg:hidden">
+              <Brand compact onClick={() => setView('home')} />
+            </div>
             <div className="hidden lg:block">
               <p className={`text-sm font-medium ${isDark ? 'text-[#8da59a]' : 'text-[#739084]'}`}>Wednesday, Oct 21</p>
               <h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{t.greeting}, {displayName}</h1>
@@ -346,7 +344,6 @@ export function SmartGrowDashboard() {
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" />
               </button>
 
-              {/* Аватарка, которая ведет в настройки */}
               <button 
                 title={t.profileSettings}
                 onClick={() => setView('settings')} 
@@ -358,8 +355,6 @@ export function SmartGrowDashboard() {
                   <div className="grid size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49]">{initials}</div>
                 )}
               </button>
-
-              <LogoutButton />
             </div>
           </header>
 
@@ -396,9 +391,6 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
           <p className={`text-sm font-medium ${isDark ? 'text-[#8da59a]' : 'text-[#739084]'}`}>{t.myPlant}</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em]">Монстера</h2>
         </div>
-        <button onClick={() => setView('settings')} className="flex items-center gap-1 text-sm font-semibold text-[#5cb887] cursor-pointer">
-          {t.change} <ChevronRight className="size-4" />
-        </button>
       </div>
 
       <div className="mt-5 grid gap-4 xl:grid-cols-[1.3fr_1fr]">
@@ -661,6 +653,26 @@ function SettingsView({
 }
 
 function Page({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <div className="mt-8"><p className="text-sm font-medium opacity-80">SmartGrow SecureAI</p><h2 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{title}</h2><p className="mt-2 text-sm opacity-70">{subtitle}</p><div className="mt-6">{children}</div></div> }
-function Brand({ compact = false }: { compact?: boolean }) { return <div className="flex items-center gap-2"><div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white"><Sprout className="size-5" /></div>{!compact && <div><p className="font-semibold tracking-[-0.03em]">SmartGrow</p><p className="text-[10px] font-medium uppercase tracking-[0.18em] opacity-70">AI garden</p></div>}</div> }
+
+function Brand({ compact = false, onClick }: { compact?: boolean; onClick?: () => void }) { 
+  return (
+    <button 
+      type="button" 
+      onClick={onClick} 
+      className="flex items-center gap-2 text-left cursor-pointer focus:outline-none transition-opacity hover:opacity-80"
+    >
+      <div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white">
+        <Sprout className="size-5" />
+      </div>
+      {!compact && (
+        <div>
+          <p className="font-semibold tracking-[-0.03em]">SmartGrow</p>
+          <p className="text-[10px] font-medium uppercase tracking-[0.18em] opacity-70">AI garden</p>
+        </div>
+      )}
+    </button>
+  ) 
+}
+
 function NavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a] hover:bg-[#22382e]' : 'text-[#789084] hover:bg-white'}`}><Icon className="size-[18px]" />{label}</button> }
 function MobileNavItem({ icon: Icon, label, active, isDark, onClick }: { icon: typeof Home; label: string; active: boolean; isDark?: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex min-w-16 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[10px] font-semibold cursor-pointer ${active ? 'bg-[#2f7056] text-white' : isDark ? 'text-[#8da59a]' : 'text-[#81958b]'}`}><Icon className="size-[18px]" />{label}</button> }
