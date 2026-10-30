@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
-import { ArrowLeft, Star, MessageSquare, Send, Check, Sprout } from 'lucide-react'
+import { ArrowLeft, Star, MessageSquare, Send, Check, Sprout, Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export const Route = createFileRoute('/feedback')({
   component: FeedbackPage,
@@ -19,9 +20,11 @@ const feedbackTranslations = {
     catBug: 'Помилка / Баг',
     placeholder: 'Опишіть ваші враження, ідеї або знайдені баги...',
     send: 'Надіслати відгук',
+    sending: 'Надсилання...',
     successTitle: 'Дякуємо за ваш відгук!',
     successDesc: 'Ваша оцінка допомагає робити SmartGrow AI кращим.',
     sendAnother: 'Надіслати ще один',
+    errorText: 'Не вдалося надіслати відгук. Спробуйте ще раз.'
   },
   'English': {
     back: 'Back to overview',
@@ -35,9 +38,11 @@ const feedbackTranslations = {
     catBug: 'Bug / Issue',
     placeholder: 'Describe your feedback, ideas, or bugs found...',
     send: 'Submit feedback',
+    sending: 'Submitting...',
     successTitle: 'Thank you for your feedback!',
     successDesc: 'Your rating helps us improve SmartGrow AI.',
     sendAnother: 'Submit another',
+    errorText: 'Failed to submit feedback. Please try again.'
   },
   'Español': {
     back: 'Volver al resumen',
@@ -51,9 +56,11 @@ const feedbackTranslations = {
     catBug: 'Error / Bug',
     placeholder: 'Describe tus comentarios, ideas o errores encontrados...',
     send: 'Enviar comentarios',
+    sending: 'Enviando...',
     successTitle: '¡Gracias por tus comentarios!',
     successDesc: 'Tu valoración nos ayuda a mejorar SmartGrow AI.',
     sendAnother: 'Enviar otro',
+    errorText: 'Error al enviar comentarios. Inténtalo de nuevo.'
   },
   'Português': {
     back: 'Voltar à visão geral',
@@ -67,9 +74,11 @@ const feedbackTranslations = {
     catBug: 'Erro / Bug',
     placeholder: 'Descreva seus comentários, ideias ou bugs encontrados...',
     send: 'Enviar feedback',
+    sending: 'Enviando...',
     successTitle: 'Obrigado pelo seu feedback!',
     successDesc: 'Sua avaliação nos ajuda a melhorar o SmartGrow AI.',
     sendAnother: 'Enviar outro',
+    errorText: 'Falha ao enviar feedback. Tente novamente.'
   }
 }
 
@@ -80,6 +89,7 @@ function FeedbackPage() {
   const [category, setCategory] = useState<string>('general')
   const [text, setText] = useState('')
   const [sent, setSent] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('smartgrow_language') as keyof typeof feedbackTranslations
@@ -97,17 +107,40 @@ function FeedbackPage() {
     { id: 'bug', label: t.catBug },
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!text.trim()) return
-    setSent(true)
-    setText('')
+    if (!text.trim() || isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error } = await supabase
+        .from('feedback')
+        .insert([
+          {
+            user_id: user?.id || null,
+            rating,
+            category,
+            message: text.trim(),
+          }
+        ])
+
+      if (error) throw error
+
+      setSent(true)
+      setText('')
+    } catch (err) {
+      console.error('Error sending feedback to Supabase:', err)
+      alert(t.errorText)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <main className="min-h-screen bg-[#f7f8f3] text-[#17372d] px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-2xl">
-        {/* Шапка с логотипом SmartGrow и кнопкой возврата */}
         <div className="flex items-center justify-between mb-8">
           <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white">
@@ -151,7 +184,6 @@ function FeedbackPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Функционал оценивания звёздами */}
               <div>
                 <label className="block text-sm font-semibold text-[#17372d] mb-2">
                   {t.rateTitle}
@@ -184,7 +216,6 @@ function FeedbackPage() {
                 </div>
               </div>
 
-              {/* Выбор категории */}
               <div>
                 <label className="block text-sm font-semibold text-[#17372d] mb-2">
                   {t.categoryTitle}
@@ -207,7 +238,6 @@ function FeedbackPage() {
                 </div>
               </div>
 
-              {/* Текстовое поле */}
               <div>
                 <textarea
                   value={text}
@@ -221,10 +251,20 @@ function FeedbackPage() {
 
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 w-full rounded-2xl bg-[#2f7056] px-5 py-4 text-sm font-semibold text-white hover:bg-[#245b45] transition cursor-pointer"
+                disabled={isSubmitting}
+                className="flex items-center justify-center gap-2 w-full rounded-2xl bg-[#2f7056] px-5 py-4 text-sm font-semibold text-white hover:bg-[#245b45] transition disabled:opacity-60 cursor-pointer"
               >
-                <Send className="size-4" />
-                {t.send}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    {t.sending}
+                  </>
+                ) : (
+                  <>
+                    <Send className="size-4" />
+                    {t.send}
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -233,3 +273,4 @@ function FeedbackPage() {
     </main>
   )
 }
+//.
