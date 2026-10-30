@@ -20,9 +20,25 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const emailSchema = z.string().trim().email("Невірна адреса пошти").max(255);
-const passwordSchema = z.string().min(8, "Пароль має містити щонайменше 8 символів").max(72);
-const nameSchema = z.string().trim().min(2, "Вкажіть ім'я (щонайменше 2 символи)").max(60);
+const emailSchema = z
+  .string()
+  .trim()
+  .min(1, "Будь ласка, вкажіть вашу пошту")
+  .email("Невірна адреса пошти")
+  .max(255);
+
+const passwordSchema = z
+  .string()
+  .min(1, "Будь ласка, вкажіть пароль")
+  .min(8, "Пароль має містити щонайменше 8 символів")
+  .max(72);
+
+const nameSchema = z
+  .string()
+  .trim()
+  .min(1, "Будь ласка, вкажіть ваше ім'я")
+  .min(2, "Ім'я має містити щонайменше 2 символи")
+  .max(60);
 
 type Mode = "signup" | "signin" | "forgot";
 
@@ -48,8 +64,23 @@ function AuthPage() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      // Проверка на пустые поля перед отправкой
+      if (mode === "signup" && !name.trim()) {
+        toast.error("Будь ласка, вкажіть ваше ім'я");
+        return;
+      }
+      if (!email.trim()) {
+        toast.error("Будь ласка, вкажіть вашу пошту");
+        return;
+      }
+      if (mode !== "forgot" && !password.trim()) {
+        toast.error("Будь ласка, вкажіть пароль");
+        return;
+      }
+
       const mail = emailSchema.parse(email);
       setBusy(true);
+
       if (mode === "forgot") {
         const { error } = await supabase.auth.resetPasswordForEmail(mail, {
           redirectTo: `${window.location.origin}/reset-password`,
@@ -58,25 +89,48 @@ function AuthPage() {
         setSentTo(mail);
         return;
       }
+
       const pass = passwordSchema.parse(password);
+
       if (mode === "signup") {
         const displayName = nameSchema.parse(name);
         const { data, error } = await supabase.auth.signUp({
-  email: mail,
-  password: pass,
-  options: { 
-    emailRedirectTo: `${window.location.origin}/auth`, // Добавит возврат на страницу входа
-    data: { display_name: displayName } 
-  },
-});
-        if (error) throw error;
+          email: mail,
+          password: pass,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth`,
+            data: { display_name: displayName },
+          },
+        });
+
+        if (error) {
+          if (error.message.includes("already registered") || error.message.includes("already exists")) {
+            throw new Error("Користувач із такою поштою вже існує");
+          }
+          throw error;
+        }
+
         if (!data.session) setSentTo(mail);
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: mail, password: pass });
-        if (error) throw new Error(error.message.includes("Invalid") ? "Невірна пошта або пароль" : error.message);
+        if (error) {
+          const errLower = error.message.toLowerCase();
+          if (errLower.includes("invalid login credentials") || errLower.includes("invalid")) {
+            throw new Error("Невірна пошта або пароль");
+          } else if (errLower.includes("email not confirmed")) {
+            throw new Error("Пошту не підтверджено. Перевірте вашу скриньку");
+          } else {
+            throw new Error(error.message);
+          }
+        }
       }
     } catch (err) {
-      const msg = err instanceof z.ZodError ? err.issues[0]?.message : err instanceof Error ? err.message : "Щось пішло не так";
+      const msg =
+        err instanceof z.ZodError
+          ? err.issues[0]?.message
+          : err instanceof Error
+          ? err.message
+          : "Щось пішло не так";
       toast.error(msg ?? "Щось пішло не так");
     } finally {
       setBusy(false);
