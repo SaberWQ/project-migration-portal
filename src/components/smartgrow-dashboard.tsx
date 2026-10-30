@@ -12,6 +12,7 @@ type ThemeOption = 'Світла' | 'Темна' | 'Системна'
 const translations = {
   'Українська': {
     nav: { home: 'Огляд', analytics: 'Аналітика', ai: 'Leafy AI', tasks: 'Квести', shop: 'Магазин' },
+    slogan: 'Розумний догляд — це просто.',
     greeting: 'Доброго дня',
     leaveFeedback: 'Залишити відгук',
     noNotifications: 'Нових сповіщень немає',
@@ -57,10 +58,33 @@ const translations = {
     themeDark: 'Темна',
     themeSystem: 'Системна',
     translatorTitle: 'Перекладач Leafy',
-    translatorDesc: 'Українська, English, Español та Português доступні для інтерфейсу й відповідей бота.'
+    translatorDesc: 'Українська, English, Español та Português доступні для інтерфейсу й відповідей бота.',
+    quests: {
+      title: 'Квести та нагороди',
+      subtitle: 'Виконуйте щоденні завдання та отримуйте монети',
+      waterPlant: 'Полити Монстеру',
+      waterPlantDesc: 'Підтримуйте вологість ґрунту вище 40%',
+      checkLight: 'Перевірити освітлення',
+      checkLightDesc: 'Переконайтеся, що рослина отримує достатньо світла',
+      claim: 'Отримати',
+      completed: 'Виконано',
+      coins: 'монет'
+    },
+    shop: {
+      title: 'Магазин Leafy',
+      subtitle: 'Купуйте скіни та прикраси за зароблені монети',
+      balance: 'Ваш баланс',
+      buy: 'Купити',
+      purchased: 'Куплено',
+      item1Title: 'Золотий вазон',
+      item1Desc: 'Преміальний вигляд для вашої Монстери',
+      item2Title: 'Неоновий скін Leafy',
+      item2Desc: 'Яскраве неонове сяйво асистента'
+    }
   },
   'English': {
     nav: { home: 'Overview', analytics: 'Analytics', ai: 'Leafy AI', tasks: 'Quests', shop: 'Shop' },
+    slogan: 'Smart care made simple.',
     greeting: 'Good day',
     leaveFeedback: 'Leave feedback',
     noNotifications: 'No new notifications',
@@ -106,10 +130,33 @@ const translations = {
     themeDark: 'Dark',
     themeSystem: 'System',
     translatorTitle: 'Leafy Translator',
-    translatorDesc: 'Ukrainian, English, Spanish, and Portuguese are available for interface and bot responses.'
+    translatorDesc: 'Ukrainian, English, Spanish, and Portuguese are available for interface and bot responses.',
+    quests: {
+      title: 'Quests & Rewards',
+      subtitle: 'Complete daily tasks and earn coins',
+      waterPlant: 'Water Monstera',
+      waterPlantDesc: 'Keep soil moisture above 40%',
+      checkLight: 'Check Lighting',
+      checkLightDesc: 'Ensure your plant gets enough light',
+      claim: 'Claim',
+      completed: 'Completed',
+      coins: 'coins'
+    },
+    shop: {
+      title: 'Leafy Shop',
+      subtitle: 'Buy skins and decorations with earned coins',
+      balance: 'Your balance',
+      buy: 'Buy',
+      purchased: 'Purchased',
+      item1Title: 'Golden Pot',
+      item1Desc: 'Premium look for your Monstera',
+      item2Title: 'Neon Leafy Skin',
+      item2Desc: 'Bright neon glow for your assistant'
+    }
   },
   'Español': {
     nav: { home: 'Resumen', analytics: 'Analítica', ai: 'Leafy AI', tasks: 'Misiones', shop: 'Tienda' },
+    slogan: 'El cuidado inteligente hecho simple.',
     greeting: 'Buenos días',
     leaveFeedback: 'Dejar comentarios',
     noNotifications: 'Sin notificaciones nuevas',
@@ -155,10 +202,33 @@ const translations = {
     themeDark: 'Oscuro',
     themeSystem: 'Sistema',
     translatorTitle: 'Traductor de Leafy',
-    translatorDesc: 'Ucraniano, inglés, español y portugués disponibles para la interfaz y el bot.'
+    translatorDesc: 'Ucraniano, inglés, español y portugués disponibles para la interfaz y el bot.',
+    quests: {
+      title: 'Misiones y Recompensas',
+      subtitle: 'Completa tareas diarias y gana monedas',
+      waterPlant: 'Regar Monstera',
+      waterPlantDesc: 'Mantén la humedad del suelo por encima del 40%',
+      checkLight: 'Comprobar Iluminación',
+      checkLightDesc: 'Asegúrate de que la planta reciba suficiente luz',
+      claim: 'Reclamar',
+      completed: 'Completado',
+      coins: 'monedas'
+    },
+    shop: {
+      title: 'Tienda Leafy',
+      subtitle: 'Compra aspectos y decoraciones con las monedas ganadas',
+      balance: 'Tu saldo',
+      buy: 'Comprar',
+      purchased: 'Comprado',
+      item1Title: 'Maceta Dorada',
+      item1Desc: 'Aspecto premium para tu Monstera',
+      item2Title: 'Aspecto Neón de Leafy',
+      item2Desc: 'Brillo de neón radiante para tu asistente'
+    }
   },
   'Português': {
     nav: { home: 'Visão geral', analytics: 'Análise', ai: 'Leafy AI', tasks: 'Missões', shop: 'Loja' },
+    slogan: 'O cuidado inteligente de forma simples.',
     greeting: 'Bom dia',
     leaveFeedback: 'Deixar feedback',
     noNotifications: 'Sem novas notificações',
@@ -204,7 +274,29 @@ const translations = {
     themeDark: 'Escuro',
     themeSystem: 'Sistema',
     translatorTitle: 'Tradutor do Leafy',
-    translatorDesc: 'Ucraniano, inglês, espanhol e português disponíveis para a interface e bot.'
+    translatorDesc: 'Ucraniano, inglês, espanhol e português disponíveis para a interface e bot.',
+    quests: {
+      title: 'Missões e Recompensas',
+      subtitle: 'Conclua tarefas diárias e ganhe moedas',
+      waterPlant: 'Regar Monstera',
+      waterPlantDesc: 'Mantenha a umidade do solo acima de 40%',
+      checkLight: 'Verificar Iluminação',
+      checkLightDesc: 'Garanta que a planta receba luz suficiente',
+      claim: 'Resgatar',
+      completed: 'Concluído',
+      coins: 'moedas'
+    },
+    shop: {
+      title: 'Loja Leafy',
+      subtitle: 'Compre visualizações e decorações com as moedas ganhas',
+      balance: 'Seu saldo',
+      buy: 'Comprar',
+      purchased: 'Comprado',
+      item1Title: 'Vaso Dourado',
+      item1Desc: 'Aparência premium para sua Monstera',
+      item2Title: 'Visual Neon Leafy',
+      item2Desc: 'Brilho neon para seu assistente'
+    }
   }
 }
 
@@ -218,8 +310,19 @@ export function SmartGrowDashboard() {
   const [message, setMessage] = useState('')
   const [completed, setCompleted] = useState<string[]>([])
   const [coins, setCoins] = useState(1250)
-  const [bought, setBought] = useState<number[]>([])
-  const [language, setLanguage] = useState<Language>('Українська')
+  const [bought, setBought] = useState<number[]>([1])
+
+  // Сохранение и считывание языка из localStorage
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('smartgrow_language') as Language) || 'Українська'
+    }
+    return 'Українська'
+  })
+
+  useEffect(() => {
+    localStorage.setItem('smartgrow_language', language)
+  }, [language])
 
   const [theme, setTheme] = useState<ThemeOption>(() => {
     if (typeof window !== 'undefined') {
@@ -319,7 +422,7 @@ export function SmartGrowDashboard() {
           </nav>
           <div className={`mt-auto rounded-3xl p-5 ${isDark ? 'bg-[#1d332a]' : 'bg-[#dfeee0]'}`}>
             <Sprout className="size-6 text-[#8ac79b]" />
-            <p className="mt-5 text-sm font-semibold leading-5">Smart care made simple.</p>
+            <p className="mt-5 text-sm font-semibold leading-5">{t.slogan}</p>
           </div>
         </aside>
 
@@ -362,8 +465,8 @@ export function SmartGrowDashboard() {
           {view === 'home' && <HomeView autoMode={autoMode} setAutoMode={setAutoMode} pumpRunning={pumpRunning} runPump={runPump} setView={setView} lastUpdated={lastUpdated} t={t} isDark={isDark} />}
           {view === 'analytics' && <AnalyticsView isDark={isDark} />}
           {view === 'ai' && <AiView chat={chat} message={message} setMessage={setMessage} sendMessage={sendMessage} isDark={isDark} />}
-          {view === 'tasks' && <TasksView completed={completed} setCompleted={setCompleted} setCoins={setCoins} />}
-          {view === 'shop' && <ShopView coins={coins} bought={bought} setBought={setBought} setCoins={setCoins} />}
+          {view === 'tasks' && <TasksView completed={completed} setCompleted={setCompleted} setCoins={setCoins} t={t} isDark={isDark} />}
+          {view === 'shop' && <ShopView coins={coins} bought={bought} setBought={setBought} setCoins={setCoins} t={t} isDark={isDark} />}
           {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} autoMode={autoMode} setAutoMode={setAutoMode} profile={profile} onProfileUpdate={fetchProfile} t={t} isDark={isDark} />}
         </section>
       </div>
@@ -495,10 +598,97 @@ function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUp
   )
 }
 
+function TasksView({ completed, setCompleted, setCoins, t, isDark }: { completed: string[]; setCompleted: React.Dispatch<React.SetStateAction<string[]>>; setCoins: React.Dispatch<React.SetStateAction<number>>; t: typeof translations['Українська']; isDark?: boolean }) {
+  const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'
+  
+  const tasks = [
+    { id: 'water', title: t.quests.waterPlant, desc: t.quests.waterPlantDesc, reward: 50 },
+    { id: 'light', title: t.quests.checkLight, desc: t.quests.checkLightDesc, reward: 30 },
+  ]
+
+  const claim = (id: string, reward: number) => {
+    if (completed.includes(id)) return
+    setCompleted([...completed, id])
+    setCoins(prev => prev + reward)
+  }
+
+  return (
+    <Page title={t.quests.title} subtitle={t.quests.subtitle}>
+      <div className="grid gap-4">
+        {tasks.map(task => {
+          const isDone = completed.includes(task.id)
+          return (
+            <div key={task.id} className={`flex items-center justify-between rounded-2xl border p-5 ${cardBg}`}>
+              <div>
+                <p className="font-semibold">{task.title}</p>
+                <p className="mt-1 text-sm opacity-70">{task.desc}</p>
+                <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#8ac79b]">
+                  +{task.reward} {t.quests.coins}
+                </span>
+              </div>
+              <button
+                onClick={() => claim(task.id, task.reward)}
+                disabled={isDone}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition cursor-pointer ${isDone ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-[#2f7056] text-white hover:bg-[#245b45]'}`}
+              >
+                {isDone ? t.quests.completed : t.quests.claim}
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </Page>
+  )
+}
+
+function ShopView({ coins, bought, setBought, setCoins, t, isDark }: { coins: number; bought: number[]; setBought: React.Dispatch<React.SetStateAction<number[]>>; setCoins: React.Dispatch<React.SetStateAction<number>>; t: typeof translations['Українська']; isDark?: boolean }) {
+  const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'
+
+  const items = [
+    { id: 1, title: t.shop.item1Title, desc: t.shop.item1Desc, price: 500 },
+    { id: 2, title: t.shop.item2Title, desc: t.shop.item2Desc, price: 800 },
+  ]
+
+  const buy = (id: number, price: number) => {
+    if (bought.includes(id) || coins < price) return
+    setBought([...bought, id])
+    setCoins(prev => prev - price)
+  }
+
+  return (
+    <Page title={t.shop.title} subtitle={t.shop.subtitle}>
+      <div className="mb-6 rounded-2xl bg-[#f1e9d8] p-5 text-[#5b4931]">
+        <p className="font-semibold">{t.shop.balance}: {coins} {t.quests.coins}</p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {items.map(item => {
+          const isBought = bought.includes(item.id)
+          return (
+            <div key={item.id} className={`flex flex-col justify-between rounded-2xl border p-5 ${cardBg}`}>
+              <div>
+                <p className="font-semibold">{item.title}</p>
+                <p className="mt-1 text-sm opacity-70">{item.desc}</p>
+              </div>
+              <div className="mt-6 flex items-center justify-between">
+                <span className="text-sm font-semibold">{item.price} {t.quests.coins}</span>
+                <button
+                  onClick={() => buy(item.id, item.price)}
+                  disabled={isBought || coins < item.price}
+                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition cursor-pointer ${isBought ? 'bg-gray-300 text-gray-600' : coins < item.price ? 'bg-gray-200 text-gray-400' : 'bg-[#2f7056] text-white hover:bg-[#245b45]'}`}
+                >
+                  {isBought ? t.shop.purchased : t.shop.buy}
+                </button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </Page>
+  )
+}
+
 function AnalyticsView({ isDark }: { isDark?: boolean }) { const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'; return <Page title="Analytics" subtitle="Sensor metrics history"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ n: '22.5°C', l: 'Temperature' }, { n: '58%', l: 'Air Humidity' }, { n: '42%', l: 'Soil Moisture' }, { n: '6.2', l: 'pH Level' }].map((x) => <div key={x.l} className={`rounded-2xl border p-5 ${cardBg}`}><p className="text-2xl font-semibold">{x.n}</p><p className="mt-2 text-sm opacity-70">{x.l}</p><span className="mt-4 inline-flex rounded-full bg-[#e6f3e8] px-2 py-1 text-xs text-[#438463]">Online</span></div>)}</div></Page> }
 function AiView({ chat, message, setMessage, sendMessage, isDark }: { chat: { from: string; text: string }[]; message: string; setMessage: (v: string) => void; sendMessage: () => void; isDark?: boolean }) { const cardBg = isDark ? 'bg-[#1a2823] border-[#2a3d35]' : 'bg-white border-[#e3ebe3]'; return <Page title="Leafy AI" subtitle="Smart assistant"><div className={`flex min-h-[400px] flex-col rounded-[24px] border p-5 ${cardBg}`}><div className="flex-1 space-y-4">{chat.map((m, i) => <div key={i} className={`flex gap-3 ${m.from === 'user' ? 'flex-row-reverse' : ''}`}><div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#e1f2e4]"><Sprout className="size-5 text-[#438463]" /></div><div className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-6 ${m.from === 'user' ? 'bg-[#2f7056] text-white' : isDark ? 'bg-[#263c32] text-[#d6eade]' : 'bg-[#f1f5ed] text-[#315847]'}`}>{m.text}</div></div>)}</div><div className="mt-5 flex gap-2"><input value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Ask Leafy..." className={`flex-1 rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'border-[#2a3d35] bg-[#121c18]' : 'border-[#dfe8df] bg-white'}`} /><button onClick={sendMessage} className="rounded-xl bg-[#2f7056] px-5 text-sm font-semibold text-white cursor-pointer">Send</button></div></div></Page> }
-function TasksView({ completed, setCompleted, setCoins }: { completed: string[]; setCompleted: (v: string[]) => void; setCoins: (v: number) => void }) { return <Page title="Quests" subtitle="Earn rewards"><div className="rounded-[24px] bg-[#1e493b] p-6 text-white"><h2 className="text-2xl font-semibold">Leafy needs water</h2></div></Page> }
-function ShopView({ coins, bought, setBought, setCoins }: { coins: number; bought: number[]; setBought: (v: number[]) => void; setCoins: (v: number) => void }) { return <Page title="Shop" subtitle="Skins & Tokens"><div className="rounded-2xl bg-[#f1e9d8] p-5"><p className="font-semibold text-[#5b4931]">Balance: {coins} coins</p></div></Page> }
 
 function SettingsView({ 
   language, 
