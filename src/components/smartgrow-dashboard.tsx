@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
+import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
 import { ProfileEditor } from '@/components/ProfileEditor'
 import { supabase } from '@/lib/supabase'
@@ -11,7 +11,7 @@ type ThemeOption = 'Світла' | 'Темна' | 'Системна'
 
 const translations = {
   'Українська': {
-    nav: { home: 'Огляд', analytics: 'Аналітика', ai: 'Leafy AI', tasks: 'Квести', shop: 'Магазин', settings: 'Налаштування' },
+    nav: { home: 'Огляд', analytics: 'Аналітика', ai: 'Leafy AI', tasks: 'Квести', shop: 'Магазин' },
     greeting: 'Доброго дня',
     leaveFeedback: 'Залишити відгук',
     noNotifications: 'Нових сповіщень немає',
@@ -61,7 +61,7 @@ const translations = {
     translatorDesc: 'Українська, English, Español та Português доступні для інтерфейсу й відповідей бота.'
   },
   'English': {
-    nav: { home: 'Overview', analytics: 'Analytics', ai: 'Leafy AI', tasks: 'Quests', shop: 'Shop', settings: 'Settings' },
+    nav: { home: 'Overview', analytics: 'Analytics', ai: 'Leafy AI', tasks: 'Quests', shop: 'Shop' },
     greeting: 'Good day',
     leaveFeedback: 'Leave feedback',
     noNotifications: 'No new notifications',
@@ -111,7 +111,7 @@ const translations = {
     translatorDesc: 'Ukrainian, English, Spanish, and Portuguese are available for interface and bot responses.'
   },
   'Español': {
-    nav: { home: 'Resumen', analytics: 'Analítica', ai: 'Leafy AI', tasks: 'Misiones', shop: 'Tienda', settings: 'Ajustes' },
+    nav: { home: 'Resumen', analytics: 'Analítica', ai: 'Leafy AI', tasks: 'Misiones', shop: 'Tienda' },
     greeting: 'Buenos días',
     leaveFeedback: 'Dejar comentarios',
     noNotifications: 'Sin notificaciones nuevas',
@@ -161,7 +161,7 @@ const translations = {
     translatorDesc: 'Ucraniano, inglés, español y portugués disponibles para la interfaz y el bot.'
   },
   'Português': {
-    nav: { home: 'Visão geral', analytics: 'Análise', ai: 'Leafy AI', tasks: 'Missões', shop: 'Loja', settings: 'Configurações' },
+    nav: { home: 'Visão geral', analytics: 'Análise', ai: 'Leafy AI', tasks: 'Missões', shop: 'Loja' },
     greeting: 'Bom dia',
     leaveFeedback: 'Deixar feedback',
     noNotifications: 'Sem novas notificações',
@@ -294,7 +294,6 @@ export function SmartGrowDashboard() {
     { id: 'ai', label: t.nav.ai, icon: Bot },
     { id: 'tasks', label: t.nav.tasks, icon: Target },
     { id: 'shop', label: t.nav.shop, icon: ShoppingBag },
-    { id: 'settings', label: t.nav.settings, icon: Settings },
   ]
 
   const lastUpdated = useMemo(() => t.justNow, [pumpRunning, t])
@@ -347,17 +346,12 @@ export function SmartGrowDashboard() {
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" />
               </button>
 
-              {/* Кнопка настроек для мобильных устройств */}
+              {/* Аватарка, которая ведет в настройки */}
               <button 
-                aria-label="Settings" 
+                title={t.profileSettings}
                 onClick={() => setView('settings')} 
-                className={`grid size-10 place-items-center rounded-full border cursor-pointer ${isDark ? 'border-[#2a3d35] bg-[#1a2823] text-[#8da59a]' : 'border-[#dfe8df] bg-white text-[#4d7161]'} lg:hidden`}
+                className="cursor-pointer focus:outline-none transition-transform hover:scale-105"
               >
-                <Settings className="size-[18px]" />
-              </button>
-
-              {/* Кликабельная аватарка на мобильных и ПК */}
-              <button onClick={() => setView('settings')} className="cursor-pointer focus:outline-none">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="size-10 rounded-full object-cover border border-[#dfe8df]" />
                 ) : (
