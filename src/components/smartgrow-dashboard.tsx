@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Activity, Bell, Bot, Check, ChevronRight, Coins, Droplets, Gauge, Home, Lightbulb, Menu, MessageSquare, Settings, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
 import { ProfileEditor } from '@/components/ProfileEditor'
+import { supabase } from '@/lib/supabase'
 
 type View = 'home' | 'analytics' | 'ai' | 'tasks' | 'shop' | 'settings'
 
@@ -35,6 +36,31 @@ export function SmartGrowDashboard() {
   const [bought, setBought] = useState<number[]>([])
   const [language, setLanguage] = useState('Українська')
 
+  const [profile, setProfile] = useState<{ full_name?: string; avatar_url?: string } | null>(null)
+
+  const fetchProfile = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('full_name, avatar_url')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (data) {
+        setProfile(data)
+      }
+    } catch (err) {
+      console.error('Помилка завантаження профілю:', err)
+    }
+  }
+
+  useEffect(() => {
+    fetchProfile()
+  }, [])
+
   const lastUpdated = useMemo(() => 'щойно', [pumpRunning])
   const runPump = () => {
     setPumpRunning(true)
@@ -46,6 +72,9 @@ export function SmartGrowDashboard() {
     setChat((items) => [...items, { from: 'user', text: message }, { from: 'leafy', text: 'За даними сенсорів усе добре. Вологість ґрунту 42%, наступний полив орієнтовно через 4 години.' }])
     setMessage('')
   }
+
+  const displayName = profile?.full_name || 'Ілля'
+  const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
     <main className="min-h-screen bg-[#f7f8f3] text-[#17372d]">
@@ -61,10 +90,12 @@ export function SmartGrowDashboard() {
         <section className="flex-1 px-5 pb-28 pt-6 sm:px-8 lg:px-12 lg:pb-10 lg:pt-10">
           <header className="flex items-center justify-between">
             <div className="lg:hidden"><Brand compact /></div>
-            <div className="hidden lg:block"><p className="text-sm font-medium text-[#739084]">Середа, 21 жовтня 2026</p><h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">Доброго дня, Ілля</h1></div>
+            <div className="hidden lg:block">
+              <p className="text-sm font-medium text-[#739084]">Середа, 21 жовтня 2026</p>
+              <h1 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">Доброго дня, {displayName}</h1>
+            </div>
             
             <div className="flex items-center gap-3">
-              {/* Нова кнопка "Залишити відгук" */}
               <Link to="/feedback" className="flex items-center gap-2 rounded-full bg-[#c8e86a] px-3 py-2 sm:px-4 text-sm font-semibold text-[#21483e] transition hover:bg-[#b9dc5c]">
                 <MessageSquare className="size-4" />
                 <span className="hidden sm:inline">Залишити відгук</span>
@@ -72,16 +103,24 @@ export function SmartGrowDashboard() {
               
               <button aria-label="Сповіщення" onClick={() => setNotification('Нових сповіщень немає')} className="relative grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161]"><Bell className="size-[18px]" /><span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#e28c61]" /></button>
               <button aria-label="Меню" onClick={() => setView('home')} className="grid size-10 place-items-center rounded-full border border-[#dfe8df] bg-white text-[#4d7161] lg:hidden"><Menu className="size-[18px]" /></button>
-              <div className="hidden size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49] sm:grid">ІЛ</div>
+
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="hidden size-10 rounded-full object-cover border border-[#dfe8df] sm:block" />
+              ) : (
+                <div className="hidden size-10 place-items-center rounded-full bg-[#c8dfc9] text-sm font-semibold text-[#285d49] sm:grid">{initials}</div>
+              )}
+
+              <LogoutButton />
             </div>
           </header>
+
           {notification && <div className="mt-4 flex items-center justify-between rounded-xl bg-[#e4f0df] px-4 py-3 text-sm text-[#39795d]"><span className="flex items-center gap-2"><Check className="size-4" />{notification}</span><button onClick={() => setNotification('')} aria-label="Закрити"><X className="size-4" /></button></div>}
           {view === 'home' && <HomeView autoMode={autoMode} setAutoMode={setAutoMode} pumpRunning={pumpRunning} runPump={runPump} setView={setView} lastUpdated={lastUpdated} />}
           {view === 'analytics' && <AnalyticsView />}
           {view === 'ai' && <AiView chat={chat} message={message} setMessage={setMessage} sendMessage={sendMessage} />}
           {view === 'tasks' && <TasksView completed={completed} setCompleted={setCompleted} setCoins={setCoins} />}
           {view === 'shop' && <ShopView coins={coins} bought={bought} setBought={setBought} setCoins={setCoins} />}
-          {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} autoMode={autoMode} setAutoMode={setAutoMode} />}
+          {view === 'settings' && <SettingsView language={language} setLanguage={setLanguage} autoMode={autoMode} setAutoMode={setAutoMode} profile={profile} onProfileUpdate={fetchProfile} />}
         </section>
       </div>
       <nav className="fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-md items-center justify-around rounded-2xl border border-[#deeadf] bg-white/95 p-2 shadow-[0_12px_35px_rgba(32,75,53,0.12)] backdrop-blur lg:hidden" aria-label="Мобільна навігація">{navItems.slice(0, 5).map((item) => <MobileNavItem key={item.id} {...item} active={view === item.id} onClick={() => setView(item.id)} />)}</nav>
@@ -90,32 +129,55 @@ export function SmartGrowDashboard() {
 }
 
 function HomeView({ autoMode, setAutoMode, pumpRunning, runPump, setView, lastUpdated }: { autoMode: boolean; setAutoMode: (v: boolean) => void; pumpRunning: boolean; runPump: () => void; setView: (v: View) => void; lastUpdated: string }) {
-  return <><div className="mt-8 flex items-end justify-between"><div><p className="text-sm font-medium text-[#739084]">Моя рослина</p><h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em]">Монстера</h2></div><button onClick={() => setView('settings')} className="flex items-center gap-1 text-sm font-semibold text-[#4b8065]">Змінити <ChevronRight className="size-4" /></button></div><div className="mt-5 grid gap-4 xl:grid-cols-[1.3fr_1fr]"><div className="relative overflow-hidden rounded-[28px] bg-[#1e493b] p-6 text-white sm:p-8"><div className="relative z-10 flex min-h-[194px] flex-col justify-between"><div className="flex items-center justify-between"><div><p className="text-sm text-[#b5d8bd]">Стан системи</p><p className="mt-2 flex items-center gap-2 text-lg font-semibold"><span className="size-2 rounded-full bg-[#9be0a8]" /> Все працює добре</p></div><div className="rounded-full bg-white/10 p-3"><Wifi className="size-5 text-[#b5d8bd]" /></div></div><div><p className="text-xs text-[#b5d8bd]">Остання синхронізація · {lastUpdated}</p><div className="mt-4 flex items-center gap-2"><div className="h-1.5 w-32 overflow-hidden rounded-full bg-white/20"><div className="h-full w-[82%] rounded-full bg-[#9be0a8]" /></div><span className="text-xs text-[#b5d8bd]">Wi-Fi стабільний</span></div></div></div><div className="absolute -right-10 -top-16 size-64 rounded-full border-[28px] border-white/5" /></div><div className="rounded-[28px] bg-[#e4f0df] p-6 sm:p-8"><div className="flex items-start justify-between"><div><p className="text-sm text-[#668677]">Автоматичний режим</p><p className="mt-2 text-2xl font-semibold">Налаштував і забув</p></div><button onClick={() => setAutoMode(!autoMode)} aria-pressed={autoMode} className={`relative h-7 w-12 rounded-full p-1 transition-colors ${autoMode ? 'bg-[#39795d]' : 'bg-[#aebdb2]'}`}><span className={`block size-5 rounded-full bg-white transition-transform ${autoMode ? 'translate-x-5' : ''}`} /></button></div><p className="mt-8 text-sm leading-6 text-[#668677]">Полив вмикається автоматично, коли вологість ґрунту нижче 30%.</p></div></div><div className="mt-8 flex items-center justify-between"><h2 className="text-lg font-semibold">Показники зараз</h2><Gauge className="size-5 text-[#739084]" /></div><div className="mt-3 grid grid-cols-3 gap-3 sm:gap-4">{readings.map(({ label, value, unit, icon: Icon, detail }) => <div key={label} className="rounded-2xl border border-[#e3ebe3] bg-white p-4 sm:p-5"><div className="grid size-9 place-items-center rounded-xl bg-[#e1f2e4] text-[#438463]"><Icon className="size-[18px]" /></div><p className="mt-5 text-xs text-[#789084]">{label}</p><p className="mt-1 text-xl font-semibold sm:text-2xl">{value}<span className="ml-0.5 text-sm font-medium text-[#789084]">{unit}</span></p><p className="mt-2 text-[11px] font-medium text-[#57916f]">{detail}</p></div>)}</div><div className="mt-8 grid gap-4 xl:grid-cols-[1.25fr_0.75fr]"><div className="rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Вологість ґрунту</h2><p className="mt-1 text-xs text-[#789084]">Останні 7 днів</p></div><span className="rounded-full bg-[#e6f3e8] px-3 py-1 text-xs font-semibold text-[#438463]">+8.4%</span></div><div className="mt-8 flex h-32 items-end gap-2 sm:gap-4">{week.map((value, index) => <div key={index} className="flex flex-1 flex-col items-center gap-2"><div className="relative w-full rounded-t-lg bg-[#e9f3e9]" style={{ height: `${value * 1.7}px`, maxHeight: 96 }}><div className="absolute inset-x-0 bottom-0 rounded-t-lg bg-[#75b886]" style={{ height: `${Math.max(35, value * 1.3)}%` }} /></div><span className="text-[10px] text-[#91a59b]">{['Пн','Вт','Ср','Чт','Пт','Сб','Нд'][index]}</span></div>)}</div></div><div className="rounded-[24px] bg-[#f1e9d8] p-5 sm:p-6"><p className="text-sm font-medium text-[#94774b]">Економія води</p><p className="mt-3 text-3xl font-semibold text-[#5b4931]">1.8 <span className="text-sm font-medium">л</span></p><p className="mt-8 text-xs leading-5 text-[#94774b]">Завдяки точковому поливу за останні 7 днів.</p></div></div><div className="mt-8 rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Швидка дія</h2><p className="mt-1 text-xs text-[#789084]">Керуйте системою вручну</p></div><Zap className="size-5 text-[#729184]" /></div><div className="mt-5 grid gap-3 sm:grid-cols-2"><button onClick={runPump} disabled={pumpRunning} className="flex items-center justify-center gap-3 rounded-2xl bg-[#2f7056] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#245b45] disabled:opacity-60"><Droplets className="size-5" />{pumpRunning ? 'Полив триває…' : 'Полити 5 секунд'}</button><button onClick={() => setView('settings')} className="flex items-center justify-center gap-3 rounded-2xl bg-[#f4f7f2] px-5 py-4 text-sm font-semibold text-[#3e6c57]"><Lightbulb className="size-5" />Керування світлом</button></div></div></>
+  return <><div className="mt-8 flex items-end justify-between"><div><p className="text-sm font-medium text-[#739084]">Моя рослина</p><h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em]">Монстера</h2></div><button onClick={() => setView('settings')} className="flex items-center gap-1 text-sm font-semibold text-[#4b8065]">Змінити <ChevronRight className="size-4" /></button></div><div className="mt-5 grid gap-4 xl:grid-cols-[1.3fr_1fr]"><div className="relative overflow-hidden rounded-[28px] bg-[#1e493b] p-6 text-white sm:p-8"><div className="relative z-10 flex min-h-[194px] flex-col justify-between"><div className="flex items-center justify-between"><div><p className="text-sm text-[#b5d8bd]">Стан системи</p><p className="mt-2 flex items-center gap-2 text-lg font-semibold"><span className="size-2 rounded-full bg-[#9be0a8]" /> Все працює добре</p></div><div className="rounded-full bg-white/10 p-3"><Wifi className="size-5 text-[#b5d8bd]" /></div></div><div><p className="text-xs text-[#b5d8bd]">Остання синхронізація · {lastUpdated}</p><div className="mt-4 flex items-center gap-2"><div className="h-1.5 w-32 overflow-hidden rounded-full bg-white/20"><div className="h-full w-[82%] rounded-full bg-[#9be0a8]" /></div><span className="text-xs text-[#b5d8bd]">Wi-Fi стабільний</span></div></div></div><div className="absolute -right-10 -top-16 size-64 rounded-full border-[28px] border-white/5" /></div><div className="rounded-[28px] bg-[#e4f0df] p-6 sm:p-8"><div className="flex items-start justify-between"><div><p className="text-sm text-[#668677]">Автоматичний режим</p><p className="mt-2 text-2xl font-semibold">Налаштував і забув</p></div><button onClick={() => setAutoMode(!autoMode)} aria-pressed={autoMode} className={`relative h-7 w-12 rounded-full p-1 transition-colors ${autoMode ? 'bg-[#39795d]' : 'bg-[#aebdb2]'}`}><span className={`block size-5 rounded-full bg-white transition-transform ${autoMode ? 'translate-x-5' : ''}`} /></button></div><p className="mt-8 text-sm leading-6 text-[#668677]">Полив вмикається автоматично, коли вологість ґрунту нижче 30%.</p></div></div><div className="mt-8 flex items-center justify-between"><h2 className="text-lg font-semibold">Показники зараз</h2><Gauge className="size-5 text-[#739084]" /></div><div className="mt-3 grid grid-cols-3 gap-3 sm:gap-4">{readings.map(({ label, value, unit, icon: Icon, detail }) => <div key={label} className="rounded-2xl border border-[#e3ebe3] bg-white p-4 sm:p-5"><div className="grid size-9 place-items-center rounded-xl bg-[#e1f2e4] text-[#438463]"><Icon className="size-[18px]" /></div><p className="mt-5 text-xs text-[#789084]">{label}</p><p className="mt-1 text-xl font-semibold sm:text-2xl">{value}<span className="ml-0.5 text-sm font-medium text-[#789084]">{unit}</span></p><p className="mt-2 text-[11px] font-medium text-[#57916f]">{detail}</p></div>)}</div><div className="mt-8 grid gap-4 xl:grid-cols-[1.25fr_0.75fr]"><div className="rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Вологість ґрунту</h2><p className="mt-1 text-xs text-[#789084]">Останні 7 днів</p></div><span className="rounded-full bg-[#e6f3e8] px-3 py-1 text-xs font-semibold text-[#438463]">+8.4%</span></div><div className="mt-8 flex h-32 items-end gap-2 sm:gap-4">{week.map((value, index) => <div key={index} className="flex flex-1 flex-col items-center gap-2"><div className="relative w-full rounded-t-lg bg-[#e9f3e9]" style={{ height: `${value - 1.7}px`, maxHeight: 96 }}><div className="absolute inset-x-0 bottom-0 rounded-t-lg bg-[#75b886]" style={{ height: `${Math.max(35, value * 1.3)}%` }} /></div><span className="text-[10px] text-[#91a59b]">{['Пн','Вт','Ср','Чт','Пт','Сб','Нд'][index]}</span></div>)}</div></div><div className="rounded-[24px] bg-[#f1e9d8] p-5 sm:p-6"><p className="text-sm font-medium text-[#94774b]">Економія води</p><p className="mt-3 text-3xl font-semibold text-[#5b4931]">1.8 <span className="text-sm font-medium">л</span></p><p className="mt-8 text-xs leading-5 text-[#94774b]">Завдяки точковому поливу за останні 7 днів.</p></div></div><div className="mt-8 rounded-[24px] border border-[#e3ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Швидка дія</h2><p className="mt-1 text-xs text-[#789084]">Керуйте системою вручну</p></div><Zap className="size-5 text-[#729184]" /></div><div className="mt-5 grid gap-3 sm:grid-cols-2"><button onClick={runPump} disabled={pumpRunning} className="flex items-center justify-center gap-3 rounded-2xl bg-[#2f7056] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#245b45] disabled:opacity-60"><Droplets className="size-5" />{pumpRunning ? 'Полив триває…' : 'Полити 5 секунд'}</button><button onClick={() => setView('settings')} className="flex items-center justify-center gap-3 rounded-2xl bg-[#f4f7f2] px-5 py-4 text-sm font-semibold text-[#3e6c57]"><Lightbulb className="size-5" />Керування світлом</button></div></div></>
 }
 
 function AnalyticsView() { return <Page title="Аналітика даних" subtitle="Історія та стан сенсорів"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ n: '22.5°C', l: 'Температура' }, { n: '58%', l: 'Вологість повітря' }, { n: '42%', l: 'Вологість ґрунту' }, { n: '6.2', l: 'Рівень pH' }].map((x) => <div key={x.l} className="rounded-2xl border border-[#e3ebe3] bg-white p-5"><p className="text-2xl font-semibold">{x.n}</p><p className="mt-2 text-sm text-[#789084]">{x.l}</p><span className="mt-4 inline-flex rounded-full bg-[#e6f3e8] px-2 py-1 text-xs text-[#438463]">Онлайн</span></div>)}</div><div className="mt-6 rounded-[24px] border border-[#e3ebe3] bg-white p-6"><h2 className="font-semibold">Динаміка показників</h2><div className="mt-8 flex h-52 items-end gap-3">{[45, 62, 54, 70, 58, 76, 64, 80, 68, 73, 65, 82].map((h, i) => <div key={i} className="flex flex-1 flex-col items-center gap-2"><div className="w-full rounded-t-lg bg-[#75b886]" style={{ height: `${h}%` }} /><span className="text-[10px] text-[#91a59b]">{i + 1}г</span></div>)}</div></div></Page> }
 function AiView({ chat, message, setMessage, sendMessage }: { chat: { from: string; text: string }[]; message: string; setMessage: (v: string) => void; sendMessage: () => void }) { return <Page title="Leafy AI" subtitle="Ваш розумний помічник з догляду за рослиною"><div className="grid gap-6 lg:grid-cols-[1fr_280px]"><div className="flex min-h-[500px] flex-col rounded-[24px] border border-[#e3ebe3] bg-white p-5"><div className="flex-1 space-y-4">{chat.map((m, i) => <div key={i} className={`flex gap-3 ${m.from === 'user' ? 'flex-row-reverse' : ''}`}><div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#e1f2e4]"><Sprout className="size-5 text-[#438463]" /></div><div className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-6 ${m.from === 'user' ? 'bg-[#2f7056] text-white' : 'bg-[#f1f5ed] text-[#315847]'}`}>{m.text}</div></div>)}</div><div className="mt-5 flex gap-2"><input aria-label="Повідомлення Leafy AI" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) sendMessage() }} placeholder="Запитайте про свою рослину..." className="min-w-0 flex-1 rounded-xl border border-[#dfe8df] px-4 py-3 text-sm outline-none focus:border-[#57916f]" /><button onClick={sendMessage} className="rounded-xl bg-[#2f7056] px-5 text-sm font-semibold text-white">Надіслати</button></div></div><div className="rounded-[24px] bg-[#e4f0df] p-6"><img src="/images/icons/leafy_character.svg" alt="Leafy" className="mx-auto h-36" /><h3 className="mt-4 font-semibold">Поради Leafy</h3><p className="mt-2 text-sm leading-6 text-[#668677]">Ставте питання про полив, світло, живлення або стан сенсорів.</p></div></div></Page> }
 function TasksView({ completed, setCompleted, setCoins }: { completed: string[]; setCompleted: (v: string[]) => void; setCoins: (v: number) => void }) { const tasks: [string, string, string][] = [['water', 'Полити рослину', 'Полийте Монстеру вручну'], ['check', 'Перевірити показники', 'Перегляньте аналітику сенсорів'], ['chat', 'Запитати Leafy', 'Отримайте пораду від AI']]; return <Page title="Завдання та квести" subtitle="Розвивайте свою теплицю та отримуйте нагороди"><div className="rounded-[24px] bg-[#1e493b] p-6 text-white"><div className="flex items-center justify-between"><div><p className="text-sm text-[#b5d8bd]">Активний квест</p><h2 className="mt-2 text-2xl font-semibold">Leafy хоче пити</h2><p className="mt-2 text-sm text-[#b5d8bd]">Виконайте завдання, щоб отримати нагороду.</p></div><Target className="size-10 text-[#9be0a8]" /></div></div><div className="mt-6 space-y-3">{tasks.map(([id, title, desc]) => { const done = completed.includes(id); return <div key={id} className="flex items-center gap-4 rounded-2xl border border-[#e3ebe3] bg-white p-4"><div className={`grid size-10 place-items-center rounded-xl ${done ? 'bg-[#e1f2e4] text-[#438463]' : 'bg-[#f1f5ed] text-[#4b8065]'}`}>{done ? <Check className="size-5" /> : <Target className="size-5" />}</div><div className="flex-1"><p className={`font-semibold ${done ? 'text-[#57916f] line-through' : ''}`}>{title}</p><p className="mt-1 text-xs text-[#789084]">{desc}</p></div>{!done && <button onClick={() => { setCompleted([...completed, id]); setCoins(1300) }} className="rounded-xl bg-[#e4f0df] px-3 py-2 text-xs font-semibold text-[#39795d]">+50 XP</button>}</div>})}</div></Page> }
 function ShopView({ coins, bought, setBought, setCoins }: { coins: number; bought: number[]; setBought: (v: number[]) => void; setCoins: (v: number) => void }) { const [tab, setTab] = useState<'skins' | 'tokens'>('skins'); const [activeSkin, setActiveSkin] = useState(0); const skins: [string, number, string][] = [['Листкова корона', 500, '/images/icons/shop_leaf_crown.svg'], ['Чарівні окуляри', 750, '/images/icons/shop_magic_glasses.svg'], ['Крила метелика', 1000, '/images/icons/shop_butterfly_wings.svg']]; const packs: [string, number, string][] = [['Стартовий набір', 100, '10 токенів'], ['Догляд щодня', 250, '30 токенів'], ['Преміум місяць', 499, 'Безлімітний чат на 30 днів']]; return <Page title="Магазин" subtitle="Скіни для тамагочі, токени Leafy AI та підписка"><div className="flex items-center justify-between rounded-2xl bg-[#f1e9d8] p-5"><div><p className="font-semibold text-[#5b4931]">Ваш баланс</p><p className="mt-1 text-xs text-[#94774b]">Покупки з’являться на тамагочі одразу</p></div><p className="flex items-center gap-2 text-xl font-bold text-[#5b4931]"><Coins className="size-5" />{coins}</p></div><div className="mt-5 flex gap-2 rounded-xl bg-[#edf4eb] p-1"><button onClick={() => setTab('skins')} className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${tab === 'skins' ? 'bg-white text-[#2f7056] shadow-sm' : 'text-[#789084]'}`}>Скіни тамагочі</button><button onClick={() => setTab('tokens')} className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${tab === 'tokens' ? 'bg-white text-[#2f7056] shadow-sm' : 'text-[#789084]'}`}>Токени та підписка</button></div>{tab === 'skins' ? <><div className="mt-5 rounded-[24px] bg-[#e4f0df] p-6 text-center"><p className="text-sm font-semibold text-[#39795d]">Попередній перегляд тамагочі</p><div className="relative mx-auto mt-3 grid size-36 place-items-center rounded-[38%] bg-[#9bd3a4] shadow-inner"><img src="/images/icons/leafy_character.svg" alt="Тамагочі Leafy" className="size-24" />{bought.includes(activeSkin) && <img src={skins[activeSkin]?.[2]} alt="Одягнений скін" className="absolute -right-2 -top-2 h-12" />}</div><p className="mt-3 text-xs text-[#668677]">{bought.includes(activeSkin) ? 'Скін одягнений' : 'Оберіть придбаний скін'}</p></div><div className="mt-6 grid gap-4 sm:grid-cols-3">{skins.map(([name, price, image], i) => { const owned = bought.includes(i); return <div key={name} className={`rounded-2xl border bg-white p-4 ${activeSkin === i ? 'border-[#57916f]' : 'border-[#e3ebe3]'}`}><button onClick={() => owned && setActiveSkin(i)} className="grid h-40 w-full place-items-center rounded-xl bg-[#e4f0df]"><img src={image} alt={name} className="h-28" /></button><p className="mt-4 font-semibold">{name}</p><div className="mt-3 flex items-center justify-between"><span className="flex items-center gap-1 text-sm text-[#94774b]"><Coins className="size-4" />{price}</span><button disabled={owned || coins < Number(price)} onClick={() => { setBought([...bought, i]); setActiveSkin(i); setCoins(coins - Number(price)) }} className="rounded-lg bg-[#2f7056] px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">{owned ? 'Одягнути' : 'Придбати'}</button></div></div>})}</div></> : <div className="mt-6 grid gap-4 sm:grid-cols-3">{packs.map(([name, price, benefit]) => <div key={name} className="rounded-2xl border border-[#e3ebe3] bg-white p-5"><p className="font-semibold">{name}</p><p className="mt-2 min-h-10 text-sm text-[#789084]">{benefit}</p><p className="mt-4 text-lg font-bold text-[#5b4931]">{price} грн</p><button onClick={() => window.alert('Оплата буде підключена після налаштування платіжного бекенду.')} className="mt-4 w-full rounded-xl bg-[#2f7056] px-3 py-2 text-sm font-semibold text-white">Обрати пакет</button></div>)}</div>}</Page> }
-function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { language: string; setLanguage: (v: string) => void; autoMode: boolean; setAutoMode: (v: boolean) => void }) { 
+
+function SettingsView({ 
+  language, 
+  setLanguage, 
+  autoMode, 
+  setAutoMode, 
+  profile, 
+  onProfileUpdate 
+}: { 
+  language: string; 
+  setLanguage: (v: string) => void; 
+  autoMode: boolean; 
+  setAutoMode: (v: boolean) => void;
+  profile: { full_name?: string; avatar_url?: string } | null;
+  onProfileUpdate: () => void;
+}) { 
   const [theme, setTheme] = useState('Світла')
   const [sound, setSound] = useState(true)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+
+  const displayName = profile?.full_name || 'Ілля SmartGrow'
+  const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
     <Page title="Налаштування профілю" subtitle="Мова, тема, звуки та персональні дані SmartGrow">
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-[#e3ebe3] bg-white p-5">
           <div className="flex flex-wrap items-center gap-4">
-            <div className="grid size-16 place-items-center rounded-full bg-[#c8dfc9] text-lg font-bold text-[#285d49]">
-              ІЛ
-            </div>
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="Avatar" className="size-16 rounded-full object-cover border border-[#dfe8df]" />
+            ) : (
+              <div className="grid size-16 place-items-center rounded-full bg-[#c8dfc9] text-lg font-bold text-[#285d49]">
+                {initials}
+              </div>
+            )}
+
             <div>
-              <p className="font-semibold">Ілля SmartGrow</p>
+              <p className="font-semibold">{displayName}</p>
               <p className="text-sm text-[#789084]">Профіль синхронізовано</p>
             </div>
+
             <div className="ml-auto flex items-center gap-2">
-              {/* При клике открывается модальное окно */}
               <button 
                 type="button"
                 onClick={() => setIsProfileModalOpen(true)}
@@ -126,6 +188,7 @@ function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { langua
               <LogoutButton />
             </div>
           </div>
+
           <button className="mt-5 w-full rounded-xl border border-[#e3ebe3] px-4 py-3 text-left text-sm">
             <span className="font-semibold">Сесії та безпека</span>
             <span className="mt-1 block text-xs text-[#789084]">Керування активними пристроями</span>
@@ -157,13 +220,15 @@ function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { langua
         </p>
       </div>
 
-      {/* Всплывающее модальное окно с редактором профиля */}
       {isProfileModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
             <button
               type="button"
-              onClick={() => setIsProfileModalOpen(false)}
+              onClick={() => {
+                setIsProfileModalOpen(false)
+                onProfileUpdate()
+              }}
               className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer"
             >
               <X className="size-5" />
@@ -175,6 +240,7 @@ function SettingsView({ language, setLanguage, autoMode, setAutoMode }: { langua
     </Page>
   )
 }
+
 function Page({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <div className="mt-8"><p className="text-sm font-medium text-[#739084]">SmartGrow SecureAI</p><h2 className="mt-1 text-3xl font-semibold tracking-[-0.04em]">{title}</h2><p className="mt-2 text-sm text-[#789084]">{subtitle}</p><div className="mt-6">{children}</div></div> }
 function Brand({ compact = false }: { compact?: boolean }) { return <div className="flex items-center gap-2"><div className="grid size-9 place-items-center rounded-xl bg-[#2f7056] text-white"><Sprout className="size-5" /></div>{!compact && <div><p className="font-semibold tracking-[-0.03em]">SmartGrow</p><p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[#7b9889]">AI garden</p></div>}</div> }
 function NavItem({ icon: Icon, label, active, onClick }: { icon: typeof Home; label: string; active: boolean; onClick: () => void }) { return <button onClick={onClick} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${active ? 'bg-[#dcecdf] text-[#2f7056]' : 'text-[#789084] hover:bg-white'}`}><Icon className="size-[18px]" />{label}</button> }
