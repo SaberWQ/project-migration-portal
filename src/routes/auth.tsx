@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Sprout } from "lucide-react";
+import { Sprout, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,6 +50,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -63,19 +64,17 @@ function AuthPage() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
+
     try {
-      // Проверка на пустые поля перед отправкой
       if (mode === "signup" && !name.trim()) {
-        toast.error("Будь ласка, вкажіть ваше ім'я");
-        return;
+        throw new Error("Будь ласка, вкажіть ваше ім'я");
       }
       if (!email.trim()) {
-        toast.error("Будь ласка, вкажіть вашу пошту");
-        return;
+        throw new Error("Будь ласка, вкажіть вашу пошту");
       }
       if (mode !== "forgot" && !password.trim()) {
-        toast.error("Будь ласка, вкажіть пароль");
-        return;
+        throw new Error("Будь ласка, вкажіть пароль");
       }
 
       const mail = emailSchema.parse(email);
@@ -131,10 +130,16 @@ function AuthPage() {
           : err instanceof Error
           ? err.message
           : "Щось пішло не так";
+      setErrorMsg(msg ?? "Щось пішло не так");
       toast.error(msg ?? "Щось пішло не так");
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleModeChange = (newMode: Mode) => {
+    setErrorMsg(null);
+    setMode(newMode);
   };
 
   return (
@@ -158,7 +163,7 @@ function AuthPage() {
                 Ми надіслали лист на <span className="font-semibold text-foreground">{sentTo}</span>.{" "}
                 {mode === "forgot" ? "Перейдіть за посиланням, щоб задати новий пароль." : "Підтвердіть адресу — і ви одразу потрапите в SmartGrow."}
               </p>
-              <button onClick={() => { setSentTo(null); setMode("signin"); }} className="mt-6 text-sm font-semibold text-primary">
+              <button onClick={() => { setSentTo(null); handleModeChange("signin"); }} className="mt-6 text-sm font-semibold text-primary">
                 Повернутися до входу
               </button>
             </div>
@@ -171,25 +176,33 @@ function AuthPage() {
                 {mode === "signup" ? "Leafy вже чекає, щоб познайомитися з вашою рослиною." : mode === "signin" ? "Увійдіть, щоб продовжити догляд." : "Вкажіть пошту — надішлемо посилання."}
               </p>
 
-              <form onSubmit={submit} className="mt-6 grid gap-3">
+              {/* Красный блок ошибки прямо над формой */}
+              {errorMsg && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-600 border border-red-200">
+                  <AlertCircle className="size-4 shrink-0" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              <form onSubmit={submit} noValidate className="mt-6 grid gap-3">
                 {mode === "signup" && <Field label="Ваше ім'я" value={name} onChange={setName} autoComplete="name" />}
                 <Field label="Пошта" type="email" value={email} onChange={setEmail} autoComplete="email" />
                 {mode !== "forgot" && (
                   <Field label="Пароль" type="password" value={password} onChange={setPassword} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
                 )}
-                <button disabled={busy} className="mt-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60">
+                <button disabled={busy} className="mt-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60 cursor-pointer">
                   {busy ? "Зачекайте…" : mode === "signup" ? "Зареєструватися" : mode === "signin" ? "Увійти" : "Надіслати посилання"}
                 </button>
               </form>
 
               <div className="mt-5 flex flex-wrap justify-between gap-2 text-sm">
                 {mode === "signup" ? (
-                  <button onClick={() => setMode("signin")} className="font-semibold text-primary">Вже маю акаунт</button>
+                  <button onClick={() => handleModeChange("signin")} className="font-semibold text-primary">Вже маю акаунт</button>
                 ) : (
-                  <button onClick={() => setMode("signup")} className="font-semibold text-primary">Створити акаунт</button>
+                  <button onClick={() => handleModeChange("signup")} className="font-semibold text-primary">Створити акаунт</button>
                 )}
-                {mode === "signin" && <button onClick={() => setMode("forgot")} className="text-muted-foreground">Забули пароль?</button>}
-                {mode === "forgot" && <button onClick={() => setMode("signin")} className="text-muted-foreground">До входу</button>}
+                {mode === "signin" && <button onClick={() => handleModeChange("forgot")} className="text-muted-foreground">Забули пароль?</button>}
+                {mode === "forgot" && <button onClick={() => handleModeChange("signin")} className="text-muted-foreground">До входу</button>}
               </div>
             </>
           )}
