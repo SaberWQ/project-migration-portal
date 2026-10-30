@@ -62,10 +62,13 @@ function AuthPage() {
       if (mode === "signup") {
         const displayName = nameSchema.parse(name);
         const { data, error } = await supabase.auth.signUp({
-          email: mail,
-          password: pass,
-          options: { emailRedirectTo: window.location.origin, data: { display_name: displayName } },
-        });
+  email: mail,
+  password: pass,
+  options: { 
+    emailRedirectTo: `${window.location.origin}/auth`, // Добавит возврат на страницу входа
+    data: { display_name: displayName } 
+  },
+});
         if (error) throw error;
         if (!data.session) setSentTo(mail);
       } else {
