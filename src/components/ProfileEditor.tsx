@@ -15,9 +15,12 @@ export function ProfileEditor() {
   async function getProfile() {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-      if (!user) return;
+      if (authError || !user) {
+        setMessage('Будь ласка, увійдіть у свій акаунт.');
+        return;
+      }
 
       const { data, error } = await supabase
         .from('profiles')
@@ -32,9 +35,9 @@ export function ProfileEditor() {
         setAvatarUrl(data.avatar_url || '');
       }
     } catch (err: any) {
-      console.error('Error loading profile:', err.message);
+      console.error('Помилка завантаження профілю:', err.message);
     } finally {
-      setLoading(false);
+      setLoading(false); // Завжди вимикаємо індикатор завантаження
     }
   }
 
@@ -51,23 +54,26 @@ export function ProfileEditor() {
       const fileExt = file.name.split('.').pop();
       const { data: { user } } = await supabase.auth.getUser();
 
-      if (!user) throw new Error('Not authenticated');
+      if (!user) {
+        setMessage('Потрібно авторизуватися для завантаження фото.');
+        return;
+      }
 
       const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
-      // Upload file to Supabase Storage
+      // Завантаження файлу в Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      // Get public image URL
+      // Отримання публічного URL зображення
       const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
       setAvatarUrl(data.publicUrl);
-      setMessage('Photo uploaded successfully!');
+      setMessage('Фото успішно завантажено!');
     } catch (err: any) {
-      setMessage(`Upload failed: ${err.message}`);
+      setMessage(`Помилка завантаження: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -80,7 +86,7 @@ export function ProfileEditor() {
       setMessage('');
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Не авторизовано');
 
       const { error } = await supabase.from('profiles').upsert({
         id: user.id,
@@ -90,31 +96,31 @@ export function ProfileEditor() {
       });
 
       if (error) throw error;
-      setMessage('Profile updated successfully!');
+      setMessage('Профіль успішно оновлено!');
     } catch (err: any) {
-      setMessage(`Update failed: ${err.message}`);
+      setMessage(`Помилка збереження: ${err.message}`);
     } finally {
       setLoading(false);
     }
   }
 
-  if (loading && !fullName && !avatarUrl) return <p>Loading profile...</p>;
+  if (loading) return <p className="text-center p-4">Завантаження даних...</p>;
 
   return (
-    <form onSubmit={updateProfile} className="max-w-md mx-auto space-y-4 p-4 border rounded">
-      <h2>Edit Profile</h2>
+    <form onSubmit={updateProfile} className="max-w-md mx-auto space-y-4 p-4 border rounded shadow-sm">
+      <h2 className="text-xl font-bold">Редагування профілю</h2>
 
       <div className="flex flex-col items-center space-y-2">
         {avatarUrl ? (
-          <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
+          <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full object-cover border" />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-            No Image
+          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+            Немає фото
           </div>
         )}
 
-        <label className="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded text-sm">
-          {uploading ? 'Uploading...' : 'Change Photo'}
+        <label className={`cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+          {uploading ? 'Завантаження...' : 'Змінити фото'}
           <input
             type="file"
             accept="image/*"
@@ -126,25 +132,25 @@ export function ProfileEditor() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Full Name / Display Name</label>
+        <label className="block text-sm font-medium">Ім'я / Псевдонім</label>
         <input
           type="text"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           className="w-full border p-2 rounded mt-1"
-          placeholder="John Doe"
+          placeholder="Введіть ваше ім'я"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading || uploading}
-        className="w-full bg-green-600 text-white py-2 rounded font-medium disabled:opacity-50"
+        className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded font-medium disabled:opacity-50"
       >
-        {loading ? 'Saving...' : 'Save Profile'}
+        {loading ? 'Збереження...' : 'Зберегти профіль'}
       </button>
 
-      {message && <p className="text-sm text-center mt-2">{message}</p>}
+      {message && <p className="text-sm text-center mt-2 text-gray-700">{message}</p>}
     </form>
   );
 }
