@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Activity, Bell, Bot, Check, Coins, Droplets, Gauge, Home, Lightbulb, MessageSquare, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
+import { Activity, Bell, Bot, Check, Droplets, Gauge, Home, Lightbulb, MessageSquare, ShoppingBag, Sprout, Target, Thermometer, Waves, Wifi, X, Zap } from 'lucide-react'
 import { LogoutButton } from '@/components/LogoutButton'
 import { ProfileEditor } from '@/components/ProfileEditor'
 import { supabase } from '@/lib/supabase'
@@ -312,7 +312,6 @@ export function SmartGrowDashboard() {
   const [coins, setCoins] = useState(1250)
   const [bought, setBought] = useState<number[]>([1])
 
-  // Сохранение и считывание языка из localStorage
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('smartgrow_language') as Language) || 'Українська'
@@ -746,7 +745,7 @@ function SettingsView({
               >
                 {t.changePhoto}
               </button>
-              <LogoutButton />
+              <LogoutButton language={language} />
             </div>
           </div>
 

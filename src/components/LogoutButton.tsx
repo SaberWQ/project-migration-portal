@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
@@ -11,30 +10,19 @@ const logoutTranslations = {
 
 type Language = keyof typeof logoutTranslations
 
-export function LogoutButton() {
-  const [lang, setLang] = useState<Language>('Українська')
+interface LogoutButtonProps {
+  language?: Language
+}
 
-  useEffect(() => {
-    const updateLang = () => {
-      const saved = localStorage.getItem('smartgrow_language') as Language
-      if (saved && logoutTranslations[saved]) {
-        setLang(saved)
-      }
-    }
-
-    updateLang()
-
-    // Отслеживаем изменения localStorage
-    window.addEventListener('storage', updateLang)
-    return () => window.removeEventListener('storage', updateLang)
-  }, [])
+export function LogoutButton({ language }: LogoutButtonProps) {
+  const currentLang = language || (typeof window !== 'undefined' ? (localStorage.getItem('smartgrow_language') as Language) : 'Українська') || 'Українська'
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     window.location.reload()
   }
 
-  const text = logoutTranslations[lang] || logoutTranslations['Українська']
+  const text = logoutTranslations[currentLang] || logoutTranslations['Українська']
 
   return (
     <button
